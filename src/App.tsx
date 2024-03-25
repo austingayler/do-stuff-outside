@@ -70,7 +70,7 @@ function App() {
           <p>{roundToNearest10Minutes().toLocaleString()}</p>
         </div> */}
 
-        <WeatherSlider />
+        {/* <WeatherSlider /> */}
 
         <a
           href="https://jungfrau.roundshot.co/interlaken-harderkulm/"
@@ -112,7 +112,7 @@ function App() {
         />
         <a target="_blank" href={dabsLink} style={{ fontSize: 72 }}>
           DABS
-          <sup class="new-tab-icon">↗</sup>
+          <sup className="new-tab-icon">↗</sup>
         </a>
 
         <iframe
