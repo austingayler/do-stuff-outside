@@ -1,0 +1,608 @@
+{
+  "geopoints": [
+    {
+      "type": "Pass",
+      "id": "Pass_7",
+      "title": "Albulapass",
+      "latitude": "46.5843",
+      "longitude": "9.85289",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/albulapass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_8",
+      "title": "Berninapass",
+      "latitude": "46.4107",
+      "longitude": "10.0266",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/berninapass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_9",
+      "title": "Br\u00fcnigpass",
+      "latitude": "46.7564994",
+      "longitude": "8.13679",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/bruenigpass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_10",
+      "title": "Fl\u00fcelapass",
+      "latitude": "46.7620502",
+      "longitude": "9.9447023",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/flueelapass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_11",
+      "title": "Furkapass",
+      "latitude": "46.5724095",
+      "longitude": "8.4148637",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/furkapass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_12",
+      "title": "Forcola di Livigno",
+      "latitude": "46.4260649",
+      "longitude": "10.052732",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/forcola-di-livigno/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_13",
+      "title": "Glaubenbergpass",
+      "latitude": "46.8929283",
+      "longitude": "8.1031874",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/glaubenbergpass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_14",
+      "title": "Glaubenbielenpass - Panoramastrasse",
+      "latitude": "46.8199994",
+      "longitude": "8.0897789",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/glaubenbielenpass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_15",
+      "title": "Gotthardpass",
+      "latitude": "46.5592994",
+      "longitude": "8.56095",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/gotthardpass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_16",
+      "title": "Grimselpass",
+      "latitude": "46.561",
+      "longitude": "8.337",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/grimselpass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_17",
+      "title": "Grosser Sankt Bernhard",
+      "latitude": "45.868977",
+      "longitude": "7.170654",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/grosser-sankt-bernhard/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_18",
+      "title": "Grosse Scheidegg",
+      "latitude": "46.6557164",
+      "longitude": "8.1018757",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/grosse-scheidegg/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_19",
+      "title": "Ibergereggpass",
+      "latitude": "47.0175301",
+      "longitude": "8.733308",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/ibergereggpass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_20",
+      "title": "Julierpass",
+      "latitude": "46.4701639",
+      "longitude": "9.7177092",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/julierpass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_21",
+      "title": "Klausenpass",
+      "latitude": "46.8682419",
+      "longitude": "8.8553908",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/klausenpass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_22",
+      "title": "Lukmanierpass",
+      "latitude": "46.5628994",
+      "longitude": "8.80091",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/lukmanierpass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_23",
+      "title": "Malojapass",
+      "latitude": "46.3999994",
+      "longitude": "9.69575",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/malojapass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_24",
+      "title": "Nufenenpass",
+      "latitude": "46.4779994",
+      "longitude": "8.38669",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/nufenenpass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_25",
+      "title": "Oberalppass",
+      "latitude": "46.6584",
+      "longitude": "8.67104",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/oberalppass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_26",
+      "title": "Ofenpass",
+      "latitude": "46.6482718",
+      "longitude": "10.2669322",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/ofenpass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_27",
+      "title": "Pragelpass",
+      "latitude": "46.9984766",
+      "longitude": "8.870122",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/pragelpass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_28",
+      "title": "San Bernardinopass",
+      "latitude": "46.4958995",
+      "longitude": "9.17079",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/san-bernardinopass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_29",
+      "title": "Simplonpass",
+      "latitude": "46.2454008",
+      "longitude": "8.0240535",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/simplonpass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_30",
+      "title": "Spl\u00fcgenpass",
+      "latitude": "46.5056",
+      "longitude": "9.33028",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/spluegenpass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_31",
+      "title": "Sustenpass",
+      "latitude": "46.7293696",
+      "longitude": "8.4470234",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/sustenpass/"
+    },
+    {
+      "type": "Pass",
+      "id": "Pass_32",
+      "title": "Umbrailpass",
+      "latitude": "46.5416",
+      "longitude": "10.4332",
+      "link": "https://alpen-paesse.ch/en/alpenpaesse/umbrailpass/"
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_8",
+      "title": "Hotel Kurhaus Berg\u00fcn",
+      "latitude": "46.5843",
+      "longitude": "9.85289",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/hotel-kurhaus-berguen-2",
+      "categories": ["restaurant", "accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_34",
+      "title": "Reichenbachfall-Bahn",
+      "latitude": "46.7564994",
+      "longitude": "8.13679",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/reichenbachfall-bahn-2",
+      "categories": ["restaurant"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_228",
+      "title": "Aare Gorge",
+      "latitude": "46.7201679",
+      "longitude": "8.204840999999988",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/aare-gorge",
+      "categories": ["outdoor-activity"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_236",
+      "title": "Chalet-Hotel Schwarzwaldalp",
+      "latitude": "46.6746388",
+      "longitude": "8.13126890000001",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/chalet-hotel-schwarzwaldalp",
+      "categories": ["accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_242",
+      "title": "Hotel-Restaurant Rhonequelle",
+      "latitude": "46.548774",
+      "longitude": "8.360338899999988",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/hotel-restaurant-rhonequelle-2",
+      "categories": ["accommodation", "restaurant"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_248",
+      "title": "Hotel Tiefenbach ",
+      "latitude": "46.5920003",
+      "longitude": "8.465492700000027",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/hotel-tiefenbach",
+      "categories": ["accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_254",
+      "title": "Infopoint Gletsch",
+      "latitude": "46.562011",
+      "longitude": "8.36109399999998",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/infopoint-gletsch-2",
+      "categories": [""]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_256",
+      "title": "National Gotthard Museum",
+      "latitude": "46.5726824",
+      "longitude": " 8.560867599999938",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/national-gotthard-museum",
+      "categories": ["outdoor-activity"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_258",
+      "title": "Passo San Gottardo",
+      "latitude": "46.5499775",
+      "longitude": "8.570216200000004",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/passo-san-gottardo",
+      "categories": ["accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_260",
+      "title": "Motel Gottardo Sud",
+      "latitude": "46.4913052",
+      "longitude": "8.736518799999999",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/motel-gottardo-sud",
+      "categories": ["accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_262",
+      "title": "Sasso San Gottardo",
+      "latitude": "46.558675",
+      "longitude": "8.566298999999958",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/sasso-san-gottardo",
+      "categories": ["outdoor-activity"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_264",
+      "title": "Gelmer Funicular",
+      "latitude": "46.6129075",
+      "longitude": "8.308645399999932",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/gelmerbahn",
+      "categories": ["outdoor-activity"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_266",
+      "title": "Hospiz: Grimsel Undergrund",
+      "latitude": "46.7010666",
+      "longitude": "8.232905399999936",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/hospiz-grimsel-undergrund-2",
+      "categories": ["outdoor-activity"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_268",
+      "title": "Hotel and Nature Resort Handeck",
+      "latitude": "46.61189",
+      "longitude": "8.307659999999942",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/hotel-and-nature-resort-handeck",
+      "categories": ["accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_270",
+      "title": "Historical Alpine Hotel Grimsel Hospiz",
+      "latitude": "46.57252",
+      "longitude": "8.333859999999959",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/historical-alpine-hotel-grimsel-hospiz-2",
+      "categories": ["accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_272",
+      "title": "Restaurant und Berghaus Oberaar",
+      "latitude": "46.5616738",
+      "longitude": "8.344684499999971",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/restaurant-und-berghaus-oberaar",
+      "categories": ["accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_274",
+      "title": "Sidelhorn Aerial Cable Car",
+      "latitude": "46.5717566",
+      "longitude": "8.332574199999954",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/sidelhorn-aerial-cable-car-2",
+      "categories": ["outdoor-activity"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_276",
+      "title": "Hotel Grimselblick",
+      "latitude": "46.5614",
+      "longitude": "8.337580000000003",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/hotel-grimselblick",
+      "categories": ["accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_284",
+      "title": "Esotec ",
+      "latitude": "46.70622119999999",
+      "longitude": "8.229031899999995",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/esotec",
+      "categories": [""]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_286",
+      "title": "X-Alpin",
+      "latitude": "46.70622119999999",
+      "longitude": "8.229031899999995",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/x-alpin",
+      "categories": [""]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_290",
+      "title": "Hotel B\u00e4ren",
+      "latitude": "46.65532",
+      "longitude": "8.288720000000012",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/hotel-baeren",
+      "categories": ["Accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_294",
+      "title": "Hotel Grimsel Passh\u00f6he",
+      "latitude": "46.5618721",
+      "longitude": "8.3385992",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/hotel-grimsel-passhoehe-3",
+      "categories": ["accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_298",
+      "title": "Oberaarbahn",
+      "latitude": "46.57161",
+      "longitude": "8.331814999999999",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/oberaarbahn-2",
+      "categories": ["Outdoor Activities"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_300",
+      "title": "Hospizbahn",
+      "latitude": "46.57161",
+      "longitude": "8.331814999999999",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/hospizbahn",
+      "categories": ["Outdoor Activities"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_302",
+      "title": "Grand Tour of Switzerland ",
+      "latitude": null,
+      "longitude": null,
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/grand-tour-of-switzerland",
+      "categories": ["Outdoor Activities"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_304",
+      "title": "Hotel Klausenpass",
+      "latitude": "46.87245979999999",
+      "longitude": "8.837101999999959",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/hotel-klausenpass-2",
+      "categories": ["Accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_308",
+      "title": "Guesthouse Urnerboden ",
+      "latitude": "46.8900807",
+      "longitude": "8.900736199999983",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/guesthouse-urnerboden",
+      "categories": ["Accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_312",
+      "title": "Urnerboden Mountain Lifts and Tourism Organisation",
+      "latitude": "46.88993",
+      "longitude": "8.900939999999991",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/urnerboden-mountain-lifts-and-tourism-organisation",
+      "categories": ["Outdoor Activities"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_314",
+      "title": "Hospezi Santa Maria am Lukmanierpass",
+      "latitude": "46.5637394",
+      "longitude": "8.800869599999942",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/hospezi-santa-maria-am-lukmanierpass-2",
+      "categories": ["Accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_316",
+      "title": "Alpinavera market at the top of the pass",
+      "latitude": "46.8556116",
+      "longitude": "9.52039220000006",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/alpinavera-market-at-the-top-of-the-pass-2",
+      "categories": ["Restaurants"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_318",
+      "title": "Restaurant Nufenenpass",
+      "latitude": "46.47799999999999",
+      "longitude": "8.386690000000044",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/restaurant-nufenenpass-2",
+      "categories": ["restaurant"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_326",
+      "title": "Hotel Bellevue",
+      "latitude": "46.4631891",
+      "longitude": "9.190517999999997",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/hotel-bellevue",
+      "categories": ["Accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_328",
+      "title": "Hotel Monte Leone",
+      "latitude": "46.2454008 ",
+      "longitude": "8.024053500000036",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/hotel-monte-leone",
+      "categories": ["Accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_332",
+      "title": "Mountain Lodge Steingletscher  ",
+      "latitude": "46.6942435",
+      "longitude": "8.364115599999991",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/mountain-lodge-steingletscher",
+      "categories": ["Accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_334",
+      "title": "T\u00e4llibahn",
+      "latitude": "46.7320989",
+      "longitude": "8.338096299999961",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/taellibahn",
+      "categories": ["Outdoor Activities"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_336",
+      "title": "Triftbridge",
+      "latitude": "46.6941669",
+      "longitude": " 8.357505800000013",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/triftbruecke",
+      "categories": ["Outdoor Activities"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_338",
+      "title": "Hotel Restaurant Urweider",
+      "latitude": "46.70554",
+      "longitude": "8.226066599999967",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/hotel-restaurant-urweider",
+      "categories": ["Accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_340",
+      "title": "Hotel-Restaurant Alpina",
+      "latitude": "46.7058179",
+      "longitude": "8.22621449999997",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/hotel-restaurant-alpina",
+      "categories": ["Accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_342",
+      "title": "Pass Excursions with the Post bus",
+      "latitude": "46.7278312",
+      "longitude": "8.18464599999993",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/pass-excursions-with-the-post-bus",
+      "categories": [""]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_344",
+      "title": "Landgasthof T\u00e4nnler",
+      "latitude": "46.6942435",
+      "longitude": "8.364115599999991",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/landgasthof-taennler-3",
+      "categories": ["Accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_352",
+      "title": "Mountain Hostel Susten Pass Hospiz",
+      "latitude": " 46.728642",
+      "longitude": "8.4469513",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/mountain-hostel-susten-pass-hospiz",
+      "categories": ["accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_354",
+      "title": "Hotel Hof & Post",
+      "latitude": "46.7062634",
+      "longitude": "8.229437899999993",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/hotel-hof-and-post",
+      "categories": ["Accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_356",
+      "title": "Gadmer Lodge ",
+      "latitude": " 46.6942435",
+      "longitude": " 8.364115599999991",
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/gadmer-lodge",
+      "categories": ["Accommodation"]
+    },
+    {
+      "type": "Activity",
+      "id": "Activity_584",
+      "title": "Swiss Cycling Alpenbrevet",
+      "latitude": null,
+      "longitude": null,
+      "link": "https://alpen-paesse.ch/en/accommodation-and-experiences/swiss-cycling-alpenbrevet",
+      "categories": ["velotour"]
+    }
+  ]
+}

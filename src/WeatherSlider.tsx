@@ -56,7 +56,7 @@ const WeatherSlider = () => {
 
     const url = (d) =>
       `https://media.meteonews.net/radarpre/chComMET_800x618_c1/radarpre_20240324_1920_${d}.png`;
-    const p = array_of_strings.map((d) => fetch(url(d)).then((r) => r.json()));
+    const p = array_of_strings.map((d) => fetch(url(d)).then((r) => r.blob()));
 
     Promise.all(p).then((values) => setImgs(values));
   });

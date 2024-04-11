@@ -4,6 +4,7 @@ import "leaflet/dist/leaflet.css";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import WeatherMap from "./WeatherMap";
 import WeatherSlider from "./WeatherSlider";
+import Passes from "./Passes";
 
 const dabsLink = "https://www.skybriefing.com/portal/delegate/dabs?today";
 
@@ -27,9 +28,11 @@ function App() {
           />
         </a>
 
+        <Passes />
+
         {/* <WeatherMap /> */}
 
-        <div className="iframeContainer w-full">
+        {/* <div className="iframeContainer w-full">
           <iframe
             style={{
               pointerEvents: "none",
@@ -38,7 +41,7 @@ function App() {
             height="450"
             src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=mm&metricTemp=°C&metricWind=km/h&zoom=7&overlay=rain&product=ecmwf&level=surface&lat=46.808&lon=8.152&detailLat=44.91813929958517&detailLon=5.998535156250001&marker=true&message=true"
           ></iframe>
-        </div>
+        </div> */}
 
         <img
           src={`https://www.srf.ch/meteo/static/prognosetafeln/wind/FOEHNDIAGRAMM.jpg?cacheKiller=${Date.now()}`}
