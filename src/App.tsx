@@ -40,7 +40,7 @@ function App() {
           />
         </a>
 
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 gap-2 justify-center flex-wrap">
           <button
             className={`${
               selectedPass === "fly" ? "bg-purple-500" : "bg-gray-500"
@@ -100,22 +100,6 @@ function App() {
 
         {selectedPass === "fly" && (
           <>
-            <img
-              src={`https://www.srf.ch/meteo/static/prognosetafeln/wind/FOEHNDIAGRAMM.jpg?cacheKiller=${Date.now()}`}
-              className="w-full object-contain"
-              style={{ width: 638, height: 477 }}
-              alt="Foehn diagram"
-            />
-            <img
-              src={
-                "https://www.srf.ch/meteo/static/prognosetafeln/wind/BISENDIAGRAMM.jpg"
-              }
-              className="w-full object-contain"
-              style={{ width: 638, height: 477 }}
-              alt="Bise diagram"
-              key={Date.now()}
-            />
-
             <div className="iframeContainer w-full">
               <iframe
                 style={{
@@ -126,6 +110,22 @@ function App() {
                 src="https://winds.mobi/stations/list?lat=46.6833&lon=7.8500&zoom=15"
               />
             </div>
+            <img
+              src={`https://www.srf.ch/meteo/static/prognosetafeln/wind/FOEHNDIAGRAMM.jpg?cacheKiller=${Date.now()}`}
+              className="w-full object-contain"
+              style={{ maxWidth: 638, maxHeight: 477 }}
+              alt="Foehn diagram"
+            />
+            <img
+              src={
+                "https://www.srf.ch/meteo/static/prognosetafeln/wind/BISENDIAGRAMM.jpg"
+              }
+              className="w-full object-contain"
+              style={{ maxWidth: 638, maxHeight: 477 }}
+              alt="Bise diagram"
+              key={Date.now()}
+            />
+
             <a target="_blank" href={dabsLink} style={{ fontSize: 72 }}>
               DABS
               <sup className="new-tab-icon">↗</sup>
