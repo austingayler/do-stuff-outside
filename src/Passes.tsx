@@ -8,93 +8,73 @@ const passes: { [id: string]: string } = {
   grimsel,
 };
 
-import { useState } from "react";
+const webcams: { [id: string]: string[] } = {};
 
-const Passes = () => {
-  // State to store the fetched HTML content
-  //   const [htmlContent, setHtmlContent] = useState("");
+Object.keys(passes).forEach((p) => (webcams[p] = []));
 
-  const [selectedPass, setSelectedPass] = useState<string | null>(null);
+webcams.furka = [
+  "https://www.dieselcrew.ch/webcam/tiefenbach.jpg",
+  "https://www.albertheimhuette.ch/webcam/albertheimhuette_west.jpg",
+  "https://www.albertheimhuette.ch/webcam/albertheimhuette_ost.jpg",
+];
+webcams.goeschenen = [
+  "https://webcam.kw-goeschenen.ch/webcam/bild.jpg",
+  "https://webcam.kw-goeschenen.ch/cam_kwg/bild.jpg",
+];
+webcams.grimsel = [
+  "https://www.hostetbach.ch/webcam/hostetbach.jpg",
+  "https://lexcam.ch/camera/webcam-baeren-guttannen/latest-image.jpg",
+];
+webcams.susten = [
+  "https://livecam.sustenpass.ch/Steinalp-Lodge000M.jpg",
+  "https://livecam.sustenpass.ch/SteinPTZ000M.jpg",
+  "https://livecam.sustenpass.ch/Sustenpass000M.jpg",
+];
 
-  // Function to handle button click and update state
-  const handleButtonClick = (string: string) => {
-    if (string === selectedPass) {
-      setSelectedPass(null);
-    } else {
-      setSelectedPass(string);
-    }
-  };
-
-  //   useEffect(() => {
-  //     const fetchHtmlContent = async () => {
-  //       try {
-  //         // Fetch the HTML content from the desired webpage
-  //         const response = await fetch(furka);
-  //         if (!response.ok) {
-  //           throw new Error("Failed to fetch HTML content");
-  //         }
-  //         // Get the HTML content from the response
-  //         const html = await response.text();
-  //         // Update the state with the fetched HTML content
-  //         setHtmlContent(html);
-  //       } catch (error) {
-  //         console.error("Error fetching HTML content:", error);
-  //       }
-  //     };
-
-  //     // Call the fetchHtmlContent function when the component mounts
-  //     fetchHtmlContent();
-
-  //     // Cleanup function
-  //     return () => {
-  //       // Optionally perform cleanup tasks here
-  //     };
-  //   }, []); // Empty dependency array ensures this effect runs only once on mount
-
+const Passes = ({ selectedPass }: { selectedPass: string | null }) => {
   return (
     <>
-      {/* <div dangerouslySetInnerHTML={{ __html: htmlContent }} /> */}
-      <div className="flex space-x-4">
-        <button
-          className={`${
-            selectedPass === "furka" ? "bg-blue-500" : "bg-gray-500"
-          } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-          onClick={() => handleButtonClick("furka")}
-        >
-          Furka
-        </button>
-        <button
-          className={`${
-            selectedPass === "grimsel" ? "bg-green-500" : "bg-gray-500"
-          } hover:bg-green-700 text-white font-bold py-2 px-4 rounded`}
-          onClick={() => handleButtonClick("grimsel")}
-        >
-          Grimsel
-        </button>
-        <button
-          className={`${
-            selectedPass === "susten" ? "bg-red-500" : "bg-gray-500"
-          } hover:bg-red-700 text-white font-bold py-2 px-4 rounded`}
-          onClick={() => handleButtonClick("susten")}
-        >
-          Susten
-        </button>
-      </div>
-
-      {selectedPass && (
-        <div className="w-full">
+      {selectedPass && passes[selectedPass] && (
+        <div key={selectedPass} className="w-full">
           <iframe
             style={{
               width: "100%",
               height: 800,
             }}
             allow="geolocation"
+            key={selectedPass}
             src={passes[selectedPass]}
           />
         </div>
       )}
+
+      {selectedPass && webcams[selectedPass] && (
+        <>
+          {webcams[selectedPass].map((wc) => (
+            <img
+              src={`${wc}?cacheKiller=${new Date().valueOf()}`}
+              className="w-full object-contain"
+              style={{ width: 638, height: 477 }}
+              alt="webcam"
+              key={wc}
+            />
+          ))}
+        </>
+      )}
+
+      {selectedPass === "grimsel" && (
+        <iframe
+          id="rs_cam_1734"
+          src="https://grimselwelt.roundshot.com/hospiz#/init-lang/en"
+          style={{
+            width: "100%",
+            height: 800,
+          }}
+        ></iframe>
+      )}
     </>
   );
 };
+
 
 export default Passes;

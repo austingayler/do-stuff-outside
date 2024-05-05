@@ -70,3 +70,13 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+h1 {
+  background: linear-gradient(90deg, red, rgb(238, 238, 0), green, blue);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-size: 7vw;
+  font-weight: bold;
+  text-align: center;
+}
