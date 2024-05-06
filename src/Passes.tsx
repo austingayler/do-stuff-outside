@@ -20,6 +20,7 @@ webcams.furka = [
 webcams.goeschenen = [
   "https://webcam.kw-goeschenen.ch/webcam/bild.jpg",
   "https://webcam.kw-goeschenen.ch/cam_kwg/bild.jpg",
+  "https://images-webcams.windy.com/35/1583226235/current/full/1583226235.jpg",
 ];
 webcams.grimsel = [
   "https://www.hostetbach.ch/webcam/hostetbach.jpg",
@@ -51,13 +52,15 @@ const Passes = ({ selectedPass }: { selectedPass: string | null }) => {
       {selectedPass && webcams[selectedPass] && (
         <>
           {webcams[selectedPass].map((wc) => (
-            <img
-              src={`${wc}?cacheKiller=${new Date().valueOf()}`}
-              className="w-full object-contain"
-              style={{ width: 638, height: 477 }}
-              alt="webcam"
-              key={wc}
-            />
+            <a href={wc} target="_blank">
+              <img
+                src={`${wc}?cacheKiller=${new Date().valueOf()}`}
+                className="w-full object-contain"
+                //   style={{ width: 638, height: 477 }}
+                alt="webcam"
+                key={wc}
+              />
+            </a>
           ))}
         </>
       )}
