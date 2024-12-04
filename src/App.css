@@ -6,3 +6,31 @@
   text-align: center;
 }
 
+.mobileScrollAdapter {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .mobileScrollAdapter {
+    width: 75%; /* Set the width to 75% */
+    margin-left: 0; /* Left align the item */
+    margin-right: auto; /* Maintain left alignment */
+  }
+}
+
+.rainbowBorder {
+  border: 5px solid transparent;
+  border-radius: 4px;
+  border-image: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
+  border-image-slice: 1;
+  animation: rainbow 3s linear infinite;
+}
+
+@keyframes rainbow {
+  0% {
+    border-image-source: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
+  }
+  100% {
+    border-image-source: linear-gradient(405deg, red, orange, yellow, green, blue, indigo, violet);
+  }
+}

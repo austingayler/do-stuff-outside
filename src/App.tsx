@@ -1,17 +1,14 @@
-import { useEffect, useRef, useState } from "react";
-import "./App.css";
-import "leaflet/dist/leaflet.css";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
-import WeatherMap from "./WeatherMap";
-import WeatherSlider from "./WeatherSlider";
-import Passes from "./Passes";
+import './App.css';
+import 'leaflet/dist/leaflet.css';
+import Passes from './Passes';
+import { useSyncedLocalStorage } from './hooks';
 
-const dabsLink = "https://www.skybriefing.com/portal/delegate/dabs?today";
+const dabsLink = 'https://www.skybriefing.com/portal/delegate/dabs?today';
 
 const imgKey = new Date().valueOf();
 
 function App() {
-  const [selectedPass, setSelectedPass] = useState<string | null>("fly");
+  const [selectedPass, setSelectedPass] = useSyncedLocalStorage('fly');
 
   const handleButtonClick = (string: string) => {
     if (string === selectedPass) {
@@ -43,41 +40,41 @@ function App() {
         <div className="flex space-x-4 gap-2 justify-center flex-wrap">
           <button
             className={`${
-              selectedPass === "fly" ? "bg-purple-500" : "bg-gray-500"
+              selectedPass === 'fly' ? 'bg-purple-500' : 'bg-gray-500'
             } hover:bg-purple-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick("fly")}
+            onClick={() => handleButtonClick('fly')}
           >
             Fly
           </button>
           <button
             className={`${
-              selectedPass === "furka" ? "bg-blue-500" : "bg-gray-500"
+              selectedPass === 'furka' ? 'bg-blue-500' : 'bg-gray-500'
             } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick("furka")}
+            onClick={() => handleButtonClick('furka')}
           >
             Furka
           </button>
           <button
             className={`${
-              selectedPass === "grimsel" ? "bg-blue-500" : "bg-gray-500"
+              selectedPass === 'grimsel' ? 'bg-blue-500' : 'bg-gray-500'
             } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick("grimsel")}
+            onClick={() => handleButtonClick('grimsel')}
           >
             Grimsel
           </button>
           <button
             className={`${
-              selectedPass === "susten" ? "bg-blue-500" : "bg-gray-500"
+              selectedPass === 'susten' ? 'bg-blue-500' : 'bg-gray-500'
             } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick("susten")}
+            onClick={() => handleButtonClick('susten')}
           >
             Susten
           </button>
           <button
             className={`${
-              selectedPass === "goeschenen" ? "bg-blue-500" : "bg-gray-500"
+              selectedPass === 'goeschenen' ? 'bg-blue-500' : 'bg-gray-500'
             } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick("goeschenen")}
+            onClick={() => handleButtonClick('goeschenen')}
           >
             Göschenen
           </button>
@@ -98,17 +95,19 @@ function App() {
           ></iframe>
         </div> */}
 
-        {selectedPass === "fly" && (
+        {selectedPass === 'fly' && (
           <>
-            <div className="iframeContainer w-full">
-              <iframe
-                style={{
-                  width: "100%",
-                  height: 600,
-                }}
-                allow="geolocation"
-                src="https://winds.mobi/stations/list?lat=46.6833&lon=7.8500&zoom=15"
-              />
+            <div className="mobileScrollAdapter">
+              <div className="w-full iframeContainer ">
+                <iframe
+                  style={{
+                    width: '100%',
+                    height: 600,
+                  }}
+                  allow="geolocation"
+                  src="https://winds.mobi/stations/list?lat=46.6833&lon=7.8500&zoom=15"
+                />
+              </div>
             </div>
             <img
               src={`https://www.srf.ch/meteo/static/prognosetafeln/wind/FOEHNDIAGRAMM.jpg?cacheKiller=${Date.now()}`}
@@ -118,7 +117,7 @@ function App() {
             />
             <img
               src={
-                "https://www.srf.ch/meteo/static/prognosetafeln/wind/BISENDIAGRAMM.jpg"
+                'https://www.srf.ch/meteo/static/prognosetafeln/wind/BISENDIAGRAMM.jpg'
               }
               className="w-full object-contain"
               style={{ maxWidth: 638, maxHeight: 477 }}
