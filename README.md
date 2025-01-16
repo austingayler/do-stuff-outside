@@ -1,3 +1,22 @@
+# Hosted at:
+https://austingayler.github.io/do-stuff-outside/
+
+## IDEAS:
+
+Enabling DABS PDF directly in the site. We'll need a proxy server due to CORS
+https://www.skybriefing.com/dabs
+
+Rain radar slider:
+https://www.srf.ch/meteo/radar
+https://www.srf.ch/meteo/static/map/layer/radar/web/RONMERCATORWEBP.20250117140000.webp?time=1737010976
+Also needs a proxy server to re-serve the images due to CORS
+
+Gipfelbuch report embedding:
+https://www.gipfelbuch.ch/verhaeltnisse/uebersicht
+Could directly hardcode the regions to care about, such as Bern. On Gipfelbuch that sends a request to 
+https://www.gipfelbuch.ch/conditions/list with some form data that you can see in the network tab.
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
