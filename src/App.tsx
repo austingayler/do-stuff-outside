@@ -48,6 +48,14 @@ function App() {
           </button>
           <button
             className={`${
+              selectedPass === 'ski' ? 'bg-purple-500' : 'bg-gray-500'
+            } hover:bg-purple-700 text-white font-bold py-2 px-4 rounded`}
+            onClick={() => handleButtonClick('ski')}
+          >
+            Ski
+          </button>
+          <button
+            className={`${
               selectedPass === 'furka' ? 'bg-blue-500' : 'bg-gray-500'
             } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
             onClick={() => handleButtonClick('furka')}
@@ -131,6 +139,11 @@ function App() {
             </a>
           </>
         )}
+        {selectedPass === 'ski' && (
+          <p>No ski stuff yet</p>
+        )}
+
+
       </div>
     </>
   );
