@@ -1,14 +1,18 @@
-import './App.css';
-import 'leaflet/dist/leaflet.css';
-import Passes from './Passes';
-import { useSyncedLocalStorage } from './hooks';
+import "./App.css";
+import "leaflet/dist/leaflet.css";
+import Passes from "./Passes";
+import { useSyncedLocalStorage } from "./hooks";
+import HighWinds from "./HighWinds";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const dabsLink = 'https://www.skybriefing.com/portal/delegate/dabs?today';
+const dabsLink = "https://www.skybriefing.com/portal/delegate/dabs?today";
 
 const imgKey = new Date().valueOf();
 
+const queryClient = new QueryClient();
+
 function App() {
-  const [selectedPass, setSelectedPass] = useSyncedLocalStorage('fly');
+  const [selectedPass, setSelectedPass] = useSyncedLocalStorage("fly");
 
   const handleButtonClick = (string: string) => {
     if (string === selectedPass) {
@@ -19,7 +23,8 @@ function App() {
   };
 
   return (
-    <>
+    // TODO: move to provider renderer
+    <QueryClientProvider client={queryClient}>
       <div className="w-full flex flex-col justify-center items-center gap-4">
         <h1>DO STUFF OUTSIDE</h1>
 
@@ -28,6 +33,7 @@ function App() {
         <a
           href="https://jungfrau.roundshot.co/interlaken-harderkulm/"
           target="_blank"
+          rel="noreferrer"
         >
           <img
             src={`https://images-webcams.windy.com/74/1697034574/current/original/1697034574.jpg?token=swisswebcams.ch:9156f0c37c25cc78a1e06141918809d3:1710835200&cacheKiller=${Date.now()}`}
@@ -39,50 +45,56 @@ function App() {
 
         <div className="flex space-x-4 gap-2 justify-center flex-wrap">
           <button
+            type="button"
             className={`${
-              selectedPass === 'fly' ? 'bg-purple-500' : 'bg-gray-500'
+              selectedPass === "fly" ? "bg-purple-500" : "bg-gray-500"
             } hover:bg-purple-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick('fly')}
+            onClick={() => handleButtonClick("fly")}
           >
             Fly
           </button>
           <button
+            type="button"
             className={`${
-              selectedPass === 'ski' ? 'bg-purple-500' : 'bg-gray-500'
+              selectedPass === "ski" ? "bg-purple-500" : "bg-gray-500"
             } hover:bg-purple-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick('ski')}
+            onClick={() => handleButtonClick("ski")}
           >
             Ski
           </button>
           <button
+            type="button"
             className={`${
-              selectedPass === 'furka' ? 'bg-blue-500' : 'bg-gray-500'
+              selectedPass === "furka" ? "bg-blue-500" : "bg-gray-500"
             } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick('furka')}
+            onClick={() => handleButtonClick("furka")}
           >
             Furka
           </button>
           <button
+            type="button"
             className={`${
-              selectedPass === 'grimsel' ? 'bg-blue-500' : 'bg-gray-500'
+              selectedPass === "grimsel" ? "bg-blue-500" : "bg-gray-500"
             } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick('grimsel')}
+            onClick={() => handleButtonClick("grimsel")}
           >
             Grimsel
           </button>
           <button
+            type="button"
             className={`${
-              selectedPass === 'susten' ? 'bg-blue-500' : 'bg-gray-500'
+              selectedPass === "susten" ? "bg-blue-500" : "bg-gray-500"
             } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick('susten')}
+            onClick={() => handleButtonClick("susten")}
           >
             Susten
           </button>
           <button
+            type="button"
             className={`${
-              selectedPass === 'goeschenen' ? 'bg-blue-500' : 'bg-gray-500'
+              selectedPass === "goeschenen" ? "bg-blue-500" : "bg-gray-500"
             } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick('goeschenen')}
+            onClick={() => handleButtonClick("goeschenen")}
           >
             Göschenen
           </button>
@@ -103,13 +115,14 @@ function App() {
           ></iframe>
         </div> */}
 
-        {selectedPass === 'fly' && (
+        {selectedPass === "fly" && (
           <>
             <div className="mobileScrollAdapter">
               <div className="w-full iframeContainer ">
                 <iframe
+                  title="Winds.mobi"
                   style={{
-                    width: '100%',
+                    width: "100%",
                     height: 600,
                   }}
                   allow="geolocation"
@@ -125,7 +138,7 @@ function App() {
             />
             <img
               src={
-                'https://www.srf.ch/meteo/static/prognosetafeln/wind/BISENDIAGRAMM.jpg'
+                "https://www.srf.ch/meteo/static/prognosetafeln/wind/BISENDIAGRAMM.jpg"
               }
               className="w-full object-contain"
               style={{ maxWidth: 638, maxHeight: 477 }}
@@ -133,19 +146,21 @@ function App() {
               key={Date.now()}
             />
 
-            <a target="_blank" href={dabsLink} style={{ fontSize: 72 }}>
+            <a
+              target="_blank"
+              href={dabsLink}
+              style={{ fontSize: 72 }}
+              rel="noreferrer"
+            >
               DABS
               <sup className="new-tab-icon">↗</sup>
             </a>
+            <HighWinds />
           </>
         )}
-        {selectedPass === 'ski' && (
-          <p>No ski stuff yet</p>
-        )}
-
-
+        {selectedPass === "ski" && <p>No ski stuff yet</p>}
       </div>
-    </>
+    </QueryClientProvider>
   );
 }
 
