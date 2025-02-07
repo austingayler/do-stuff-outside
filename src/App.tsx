@@ -4,6 +4,8 @@ import Passes from "./Passes";
 import { useSyncedLocalStorage } from "./hooks";
 import HighWinds from "./HighWinds";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
+import HighWinds2 from "./HighWinds2";
 
 const dabsLink = "https://www.skybriefing.com/portal/delegate/dabs?today";
 
@@ -13,6 +15,7 @@ const queryClient = new QueryClient();
 
 function App() {
   const [selectedPass, setSelectedPass] = useSyncedLocalStorage("fly");
+  const [showHighWinds2, setShowHighWinds2] = useState(false);
 
   const handleButtonClick = (string: string) => {
     if (string === selectedPass) {
@@ -156,6 +159,15 @@ function App() {
               <sup className="new-tab-icon">↗</sup>
             </a>
             <HighWinds />
+
+            <button
+              type="button"
+              onClick={() => setShowHighWinds2(!showHighWinds2)}
+            >
+              Show High Winds 2
+            </button>
+
+            {showHighWinds2 && <HighWinds2 />}
           </>
         )}
         {selectedPass === "ski" && <p>No ski stuff yet</p>}

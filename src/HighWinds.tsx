@@ -41,14 +41,14 @@ const HighWinds: React.FC = () => {
           />
           <Tooltip />
           <Legend />
-          <Line type="monotone" dataKey="fourk" stroke="#8884d8" name="2000m" />
+          <Line type="monotone" dataKey="fourk" stroke="#8884d8" name="4000m" />
           <Line
             type="monotone"
             dataKey="threek"
             stroke="#82ca9d"
             name="3000m"
           />
-          <Line type="monotone" dataKey="twok" stroke="#ffc658" name="4000m" />
+          <Line type="monotone" dataKey="twok" stroke="#ffc658" name="2000m" />
         </LineChart>
       </ResponsiveContainer>
     </>

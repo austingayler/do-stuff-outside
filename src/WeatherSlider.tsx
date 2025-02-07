@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
+// TODO: I think loading a bunch of images isn't the best approach, best would be a server that compiles the images into a video
+// and then serves that, run daily or so
+
 const roundUpTo = (roundTo) => (x) => Math.ceil(x / roundTo) * roundTo;
 const roundUpTo10Minutes = roundUpTo(1000 * 60 * 10);
 
