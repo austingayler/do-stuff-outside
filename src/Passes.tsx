@@ -1,42 +1,44 @@
 import { useGadmen } from "./hooks";
+import { PassType } from "./types";
+import type { SelectedPass } from "./types";
 
 const furka = "https://alpen-paesse.ch/en/alpenpaesse/furkapass/";
 const susten = "https://alpen-paesse.ch/en/alpenpaesse/sustenpass/";
 const grimsel = "https://alpen-paesse.ch/en/alpenpaesse/grimselpass/";
 
-const passes: { [id: string]: string } = {
-  furka,
-  susten,
-  grimsel,
+const passes: { [id in PassType]?: string } = {
+  [PassType.FURKA]: furka,
+  [PassType.SUSTEN]: susten,
+  [PassType.GRIMSEL]: grimsel,
 };
 
-const webcams: { [id: string]: string[] } = {};
+const webcams: { [id in PassType]?: string[] } = {};
 
 // biome-ignore lint/complexity/noForEach: <explanation>
 // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
-Object.keys(passes).forEach((p) => (webcams[p] = []));
+Object.values(PassType).forEach((p) => (webcams[p] = []));
 
-webcams.furka = [
+webcams[PassType.FURKA] = [
   "https://www.dieselcrew.ch/webcam/tiefenbach.jpg",
   "https://www.albertheimhuette.ch/webcam/albertheimhuette_west.jpg",
   "https://www.albertheimhuette.ch/webcam/albertheimhuette_ost.jpg",
 ];
-webcams.goeschenen = [
+webcams[PassType.GOESCHENEN] = [
   "https://webcam.kw-goeschenen.ch/webcam/bild.jpg",
   "https://webcam.kw-goeschenen.ch/cam_kwg/bild.jpg",
   "https://images-webcams.windy.com/35/1583226235/current/full/1583226235.jpg",
 ];
-webcams.grimsel = [
+webcams[PassType.GRIMSEL] = [
   "https://www.hostetbach.ch/webcam/hostetbach.jpg",
   "https://lexcam.ch/camera/webcam-baeren-guttannen/latest-image.jpg",
 ];
-webcams.susten = [
+webcams[PassType.SUSTEN] = [
   "https://livecam.sustenpass.ch/Steinalp-Lodge000M.jpg",
   "https://livecam.sustenpass.ch/SteinPTZ000M.jpg",
   "https://livecam.sustenpass.ch/Sustenpass000M.jpg",
 ];
 
-const Passes = ({ selectedPass }: { selectedPass: string | null }) => {
+const Passes = ({ selectedPass }: { selectedPass: SelectedPass }) => {
   const gadmen = useGadmen();
   return (
     <>
@@ -72,7 +74,7 @@ const Passes = ({ selectedPass }: { selectedPass: string | null }) => {
         </>
       )}
 
-      {selectedPass === "grimsel" && (
+      {selectedPass === PassType.GRIMSEL && (
         <div key={selectedPass} className="mobileScrollAdapter">
           <iframe
             title="Grimsel"
@@ -87,7 +89,7 @@ const Passes = ({ selectedPass }: { selectedPass: string | null }) => {
         </div>
       )}
 
-      {selectedPass === "susten" && (
+      {selectedPass === PassType.SUSTEN && (
         <>
           <img
             src={
@@ -99,6 +101,25 @@ const Passes = ({ selectedPass }: { selectedPass: string | null }) => {
           {gadmen}
         </>
       )}
+
+      {
+        selectedPass === PassType.GOESCHENEN && (
+        <div key={selectedPass} className="mobileScrollAdapter">
+          <iframe
+            title="Gadmen iframe"
+            style={{
+              width: "100%",
+              height: 800,
+            }}
+            allow="geolocation"
+            key={selectedPass}
+            src={`https://www.kw-goeschenen.ch/news/goscheneralpstrasse`}
+            className="rainbowBorder"
+          />
+        </div>
+
+        )
+      }
     </>
   );
 };

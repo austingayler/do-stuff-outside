@@ -6,6 +6,9 @@ import HighWinds from "./HighWinds";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import HighWinds2 from "./HighWinds2";
+import { PassType } from "./types";
+import type { SelectedPass } from "./types";
+import Huts from "./Huts";
 
 const dabsLink = "https://www.skybriefing.com/portal/delegate/dabs?today";
 
@@ -14,14 +17,14 @@ const imgKey = new Date().valueOf();
 const queryClient = new QueryClient();
 
 function App() {
-  const [selectedPass, setSelectedPass] = useSyncedLocalStorage("fly");
+  const [selectedPass, setSelectedPass] = useSyncedLocalStorage<SelectedPass>("selectedPass", null);
   const [showHighWinds2, setShowHighWinds2] = useState(false);
 
-  const handleButtonClick = (string: string) => {
-    if (string === selectedPass) {
+  const handleButtonClick = (pass: PassType) => {
+    if (pass === selectedPass) {
       setSelectedPass(null);
     } else {
-      setSelectedPass(string);
+      setSelectedPass(pass);
     }
   };
 
@@ -50,56 +53,65 @@ function App() {
           <button
             type="button"
             className={`${
-              selectedPass === "fly" ? "bg-purple-500" : "bg-gray-500"
+              selectedPass === PassType.FLY ? "bg-purple-500" : "bg-gray-500"
             } hover:bg-purple-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick("fly")}
+            onClick={() => handleButtonClick(PassType.FLY)}
           >
             Fly
           </button>
           <button
             type="button"
             className={`${
-              selectedPass === "ski" ? "bg-purple-500" : "bg-gray-500"
+              selectedPass === PassType.SKI ? "bg-purple-500" : "bg-gray-500"
             } hover:bg-purple-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick("ski")}
+            onClick={() => handleButtonClick(PassType.SKI)}
           >
             Ski
           </button>
           <button
             type="button"
             className={`${
-              selectedPass === "furka" ? "bg-blue-500" : "bg-gray-500"
+              selectedPass === PassType.FURKA ? "bg-blue-500" : "bg-gray-500"
             } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick("furka")}
+            onClick={() => handleButtonClick(PassType.FURKA)}
           >
             Furka
           </button>
           <button
             type="button"
             className={`${
-              selectedPass === "grimsel" ? "bg-blue-500" : "bg-gray-500"
+              selectedPass === PassType.GRIMSEL ? "bg-blue-500" : "bg-gray-500"
             } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick("grimsel")}
+            onClick={() => handleButtonClick(PassType.GRIMSEL)}
           >
             Grimsel
           </button>
           <button
             type="button"
             className={`${
-              selectedPass === "susten" ? "bg-blue-500" : "bg-gray-500"
+              selectedPass === PassType.SUSTEN ? "bg-blue-500" : "bg-gray-500"
             } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick("susten")}
+            onClick={() => handleButtonClick(PassType.SUSTEN)}
           >
             Susten
           </button>
           <button
             type="button"
             className={`${
-              selectedPass === "goeschenen" ? "bg-blue-500" : "bg-gray-500"
+              selectedPass === PassType.GOESCHENEN ? "bg-blue-500" : "bg-gray-500"
             } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-            onClick={() => handleButtonClick("goeschenen")}
+            onClick={() => handleButtonClick(PassType.GOESCHENEN)}
           >
             Göschenen
+          </button>
+          <button
+            type="button"
+            className={`${
+              selectedPass === PassType.HUT ? "bg-blue-500" : "bg-gray-500"
+            } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
+            onClick={() => handleButtonClick(PassType.HUT)}
+          >
+            Huts
           </button>
         </div>
 
@@ -118,7 +130,7 @@ function App() {
           ></iframe>
         </div> */}
 
-        {selectedPass === "fly" && (
+        {selectedPass === PassType.FLY && (
           <>
             <div className="mobileScrollAdapter">
               <div className="w-full iframeContainer ">
@@ -170,7 +182,8 @@ function App() {
             {showHighWinds2 && <HighWinds2 />}
           </>
         )}
-        {selectedPass === "ski" && <p>No ski stuff yet</p>}
+        {selectedPass === PassType.SKI && <p>No ski stuff yet</p>}
+        {selectedPass === PassType.HUT && <Huts />}
       </div>
     </QueryClientProvider>
   );

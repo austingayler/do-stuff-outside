@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import { fetchWeatherApi } from "openmeteo";
 import { useQuery } from "@tanstack/react-query";
 
-export const useSyncedLocalStorage = (
+export const useSyncedLocalStorage = <T extends string | null>(
   key: string,
-  initialValue: string | null = null,
-): [string | null, (value: string | null) => void] => {
-  const [value, setValue] = useState<string | null>(() => {
+  initialValue: T = null as T,
+): [T, (value: T) => void] => {
+  const [value, setValue] = useState<T>(() => {
     const storedValue = localStorage.getItem(key);
-    return storedValue !== null ? storedValue : initialValue;
+    return storedValue !== null ? storedValue as T : initialValue;
   });
 
   useEffect(() => {
