@@ -43,7 +43,7 @@ const Passes = ({ selectedPass }: { selectedPass: SelectedPass }) => {
   return (
     <>
       {selectedPass && passes[selectedPass] && (
-        <div key={selectedPass} className="mobileScrollAdapter">
+        <div key={`${selectedPass}alpen-paesse`} className="mobileScrollAdapter">
           <iframe
             title="Gadmen iframe"
             style={{
