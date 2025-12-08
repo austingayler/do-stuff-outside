@@ -57,9 +57,9 @@ async function takeScreenshots() {
     await page.waitForNetworkIdle({ timeout: 10000 }).catch(() => {});
 
     for (const day of dates) {
-      // Click the date button
+      // Click the date button (use attribute selector since ID starts with digit)
       console.log(`Selecting date: ${day}`);
-      await page.click(`button#${day}`);
+      await page.click(`button[id="${day}"]`);
       await page.waitForNetworkIdle({ timeout: 10000 }).catch(() => {});
 
       // Wait a moment for the map to render
