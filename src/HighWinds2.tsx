@@ -44,10 +44,23 @@ const elevationLabels: Record<string, string> = {
 function formatDay(day: string, index: number): string {
   const month = day.slice(4, 6);
   const date = day.slice(6, 8);
-  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
   const monthName = monthNames[Number.parseInt(month, 10) - 1];
   const dateNum = Number.parseInt(date, 10);
-  
+
   if (index === 0) {
     return `Today (${monthName} ${dateNum})`;
   }
@@ -76,7 +89,13 @@ const HighWinds2: React.FC = () => {
         <tbody>
           {elevations.map((elevation) => (
             <tr key={elevation}>
-              <td style={{ padding: 8, border: "1px solid #ccc", fontWeight: "bold" }}>
+              <td
+                style={{
+                  padding: 8,
+                  border: "1px solid #ccc",
+                  fontWeight: "bold",
+                }}
+              >
                 {elevationLabels[elevation]}
               </td>
               {days.map((day, index) => (
