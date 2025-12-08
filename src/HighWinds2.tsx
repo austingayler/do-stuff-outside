@@ -19,37 +19,61 @@ function getNextFiveDays() {
     const year = futureDate.getFullYear();
     const month = String(futureDate.getMonth() + 1).padStart(2, "0");
     const day = String(futureDate.getDate()).padStart(2, "0");
-    const hours = String(futureDate.getHours()).padStart(2, "0");
-    dates.push(`${year}${month}${day}${hours}`);
+    // const hours = String(futureDate.getHours()).padStart(2, "0");
+    dates.push(`${year}${month}${day}`);
   }
 
   return dates;
 }
 
-const createImageUrl = (elevation: string, day: string) =>
+const createWindyImageUrl = (elevation: string, day: string) =>
   `/api/images/wind-${elevation}-${day}.png`;
+
+// TODO: Implement xctherm scraper
+// const createXcThermImageUrl = (elevation: string, day: string) =>
+//   `/api/images/xctherm-${elevation}-${day}.png`;
 
 const days = getNextFiveDays();
 
 const images = elevations.flatMap((elevation) =>
-  days.map((day) => createImageUrl(elevation, day)),
+  days.map((day) => createWindyImageUrl(elevation, day)),
 );
+
+// const xcThermImages = days.map((day) => createXcThermImageUrl("4000", day));
 
 const HighWinds2: React.FC = () => {
   return (
     <>
-      {images.map((src) => (
-        <img
-          key={src}
-          src={src}
-          alt="Windy weather snapshot"
-          style={{
-            width: "100%",
-            height: "auto",
-            marginBottom: 20,
-          }}
-        />
-      ))}
+      <div>
+        {images.map((src) => (
+          <img
+            key={src}
+            src={src}
+            alt="Windy weather snapshot"
+            style={{
+              width: "100%",
+              height: "auto",
+              marginBottom: 20,
+            }}
+          />
+        ))}
+      </div>
+      {/* TODO: Implement xctherm scraper
+      <div>
+        {xcThermImages.map((src) => (
+          <img
+            key={src}
+            src={src}
+            alt="XCTherm weather snapshot"
+            style={{
+              width: "100%",
+              height: "auto",
+              marginBottom: 20,
+            }}
+          />
+        ))}
+      </div>
+      */}
     </>
   );
 };

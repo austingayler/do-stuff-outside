@@ -18,7 +18,7 @@ const queryClient = new QueryClient();
 
 function App() {
   const [selectedPass, setSelectedPass] = useSyncedLocalStorage<SelectedPass>("selectedPass", null);
-  const [showHighWinds2, setShowHighWinds2] = useState(false);
+  const [showHighWinds2, setShowHighWinds2] = useState(true);
 
   const handleButtonClick = (pass: PassType) => {
     if (pass === selectedPass) {
@@ -170,7 +170,7 @@ function App() {
               DABS
               <sup className="new-tab-icon">↗</sup>
             </a>
-            <HighWinds />
+            {/* <HighWinds /> */}
 
             <button
               type="button"

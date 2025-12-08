@@ -1,21 +1,17 @@
 {
-  "name": "scrape-n-serve",
+  "name": "scrape-wind",
   "version": "1.0.0",
-  "description": "A script to download and serve weather images.",
-  "main": "api.js",
+  "description": "A script to scrape wind data from Windy.",
   "type": "module",
   "scripts": {
-    "start": "node api.js",
-    "scrape": "node scrape.js"
+    "scrape": "node scrapeWindy/scrapeWind.js"
   },
   "dependencies": {
-    "node-fetch": "^2.6.7",
-    "express": "^4.18.2",
     "puppeteer": "^24.0.0"
   },
   "devDependencies": {},
   "engines": {
-    "node": ">=14"
+    "node": ">=18"
   },
   "author": "",
   "license": "MIT"

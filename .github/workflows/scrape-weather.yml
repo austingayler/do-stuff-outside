@@ -1,0 +1,49 @@
+name: Scrape Wind Data
+
+on:
+  schedule:
+    # Run every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+
+      - name: Checkout existing data
+        run: |
+          git fetch origin data || true
+          git checkout origin/data -- server/scrapeWindy/images 2>/dev/null || mkdir -p server/scrapeWindy/images
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install server dependencies
+        run: cd server && npm install
+
+      - name: Delete images older than 5 days
+        run: |
+          mkdir -p server/scrapeWindy/images
+          find server/scrapeWindy/images -name "*.png" -mtime +5 -delete
+
+      - name: Run wind scraper
+        run: cd server/scrapeWindy && node scrapeWind.js
+
+      - name: Move screenshots to images folder
+        run: mv server/scrapeWindy/wind-*.png server/scrapeWindy/images/ 2>/dev/null || true
+
+      - name: Push to data branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan data-temp
+          git reset
+          git add server/scrapeWindy/images/ -f
+          git commit -m "Wind data $(date -u +%Y-%m-%d_%H:%M)" || echo "No changes"
+          git push origin data-temp:data --force
