@@ -1,4 +1,13 @@
 import puppeteer from "puppeteer";
+import { mkdirSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const imagesDir = join(__dirname, "images");
+
+// Ensure images directory exists
+mkdirSync(imagesDir, { recursive: true });
 
 // Elevation options
 const twoK = "800h";
@@ -40,7 +49,7 @@ async function takeScreenshots() {
       const page = await browser.newPage();
       await page.setViewport({ width: 1200, height: 800 });
       await page.goto(url, { waitUntil: "networkidle2" });
-      await page.screenshot({ path: `wind-${elevation}-${day}.png` });
+      await page.screenshot({ path: join(imagesDir, `wind-${elevation}-${day}.png`) });
       await page.close();
       console.log(
         `Screenshot taken for elevation ${elevation} on date ${day}.`,

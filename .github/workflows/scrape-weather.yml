@@ -35,8 +35,8 @@ jobs:
       - name: Run wind scraper
         run: cd server/scrapeWindy && node scrapeWind.js
 
-      - name: Move screenshots to images folder
-        run: mv server/scrapeWindy/wind-*.png server/scrapeWindy/images/ 2>/dev/null || true
+      - name: List generated images
+        run: ls -la server/scrapeWindy/images/
 
       - name: Push to data branch
         run: |
