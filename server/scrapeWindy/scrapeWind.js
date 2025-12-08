@@ -11,9 +11,9 @@ mkdirSync(imagesDir, { recursive: true });
 
 // Elevation options - maps our naming to xctherm button IDs
 const elevations = [
-  { id: "wind_amsl_2000", name: "800h" },  // 2000m
-  { id: "wind_amsl_3000", name: "700h" },  // 3000m
-  { id: "wind_amsl_4000", name: "600h" },  // 4000m
+  { id: "wind_amsl_2000", name: "800h" }, // 2000m
+  { id: "wind_amsl_3000", name: "700h" }, // 3000m
+  { id: "wind_amsl_4000", name: "600h" }, // 4000m
 ];
 
 // Function to get the next five days in the required format
@@ -43,9 +43,12 @@ async function takeScreenshots() {
 
   const page = await browser.newPage();
   await page.setViewport({ width: 1200, height: 800 });
-  
+
   console.log("Navigating to xctherm.com/icon");
-  await page.goto("https://xctherm.com/icon", { waitUntil: "networkidle2", timeout: 60000 });
+  await page.goto("https://xctherm.com/icon", {
+    waitUntil: "networkidle2",
+    timeout: 60000,
+  });
 
   for (const elevation of elevations) {
     // Click the elevation button
@@ -58,15 +61,20 @@ async function takeScreenshots() {
       console.log(`Selecting date: ${day}`);
       await page.click(`button#${day}`);
       await page.waitForNetworkIdle({ timeout: 10000 }).catch(() => {});
-      
+
       // Wait a moment for the map to render
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      
+
       // Screenshot the map container
-      const mapElement = await page.waitForSelector("#map-container", { timeout: 30000 });
-      const screenshotPath = join(imagesDir, `wind-${elevation.name}-${day}.png`);
+      const mapElement = await page.waitForSelector("#map", {
+        timeout: 30000,
+      });
+      const screenshotPath = join(
+        imagesDir,
+        `wind-${elevation.name}-${day}.png`,
+      );
       await mapElement.screenshot({ path: screenshotPath });
-      
+
       console.log(`Screenshot saved: ${screenshotPath}`);
     }
   }
