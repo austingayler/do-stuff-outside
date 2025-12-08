@@ -26,12 +26,15 @@ function getNextFiveDays() {
   return dates;
 }
 
+const IMAGES_BASE_URL =
+  "https://raw.githubusercontent.com/austingayler/do-stuff-outside/refs/heads/data/server/scrapeWindy/images";
+
 const createWindyImageUrl = (elevation: string, day: string) =>
-  `/api/images/wind-${elevation}-${day}.png`;
+  `${IMAGES_BASE_URL}/wind-${elevation}-${day}.png`;
 
 // TODO: Implement xctherm scraper
 // const createXcThermImageUrl = (elevation: string, day: string) =>
-//   `/api/images/xctherm-${elevation}-${day}.png`;
+//   `${IMAGES_BASE_URL}/xctherm-${elevation}-${day}.png`;
 
 const days = getNextFiveDays();
 

@@ -53,8 +53,12 @@ async function takeScreenshots() {
       const page = await browser.newPage();
       await page.setViewport({ width: 1200, height: 800 });
       await page.goto(url, { waitUntil: "networkidle2", timeout: 60000 });
+      
+      // Wait for the map element and screenshot only that
+      const mapElement = await page.waitForSelector("#map-container", { timeout: 30000 });
       const screenshotPath = join(imagesDir, `wind-${elevation}-${day}.png`);
-      await page.screenshot({ path: screenshotPath });
+      await mapElement.screenshot({ path: screenshotPath });
+      
       await page.close();
       console.log(`Screenshot saved: ${screenshotPath}`);
     }
