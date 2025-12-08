@@ -31,8 +31,7 @@ function getNextFiveDays() {
     const year = futureDate.getFullYear();
     const month = String(futureDate.getMonth() + 1).padStart(2, "0");
     const day = String(futureDate.getDate()).padStart(2, "0");
-    const hours = String(futureDate.getHours()).padStart(2, "0");
-    dates.push(`${year}${month}${day}${hours}`);
+    dates.push(`${year}${month}${day}`);
   }
 
   return dates;
