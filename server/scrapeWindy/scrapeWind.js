@@ -41,23 +41,30 @@ function getNextFiveDays() {
 // Main function to take screenshots for all combinations of elevations and dates
 async function takeScreenshots() {
   const dates = getNextFiveDays();
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
 
   for (const elevation of elevations) {
     for (const day of dates) {
       const url = `https://www.windy.com/?${elevation},${day},${lat},${lon},${zoom}`;
+      console.log(`Navigating to ${url}`);
       const page = await browser.newPage();
       await page.setViewport({ width: 1200, height: 800 });
-      await page.goto(url, { waitUntil: "networkidle2" });
-      await page.screenshot({ path: join(imagesDir, `wind-${elevation}-${day}.png`) });
+      await page.goto(url, { waitUntil: "networkidle2", timeout: 60000 });
+      const screenshotPath = join(imagesDir, `wind-${elevation}-${day}.png`);
+      await page.screenshot({ path: screenshotPath });
       await page.close();
-      console.log(
-        `Screenshot taken for elevation ${elevation} on date ${day}.`,
-      );
+      console.log(`Screenshot saved: ${screenshotPath}`);
     }
   }
 
   await browser.close();
+  console.log("All screenshots completed!");
 }
 
-takeScreenshots().catch((err) => console.error(err));
+takeScreenshots().catch((err) => {
+  console.error("Scraper failed:", err);
+  process.exit(1);
+});
