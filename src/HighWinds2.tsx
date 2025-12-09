@@ -45,8 +45,20 @@ const elevationLabels: Record<string, string> = {
 };
 
 function formatDay(day: string, index: number): string {
-  const month = day.slice(4, 6);
-  const date = day.slice(6, 8);
+  const year = Number.parseInt(day.slice(0, 4), 10);
+  const month = Number.parseInt(day.slice(4, 6), 10) - 1;
+  const date = Number.parseInt(day.slice(6, 8), 10);
+
+  const dayDate = new Date(year, month, date);
+  const dayNames = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
   const monthNames = [
     "Jan",
     "Feb",
@@ -61,23 +73,59 @@ function formatDay(day: string, index: number): string {
     "Nov",
     "Dec",
   ];
-  const monthName = monthNames[Number.parseInt(month, 10) - 1];
-  const dateNum = Number.parseInt(date, 10);
+  const dayName = dayNames[dayDate.getDay()];
+  const monthName = monthNames[month];
 
   if (index === 0) {
-    return `Today (${monthName} ${dateNum})`;
+    return `Today (${monthName} ${date})`;
   }
   if (index === 1) {
-    return `Tomorrow (${monthName} ${dateNum})`;
+    return `Tomorrow (${monthName} ${date})`;
   }
-  return `${monthName} ${dateNum}`;
+  return `${dayName}, ${date} ${monthName}`;
 }
 
 // const xcThermImages = days.map((day) => createXcThermImageUrl("4000", day));
 
 const HighWinds2: React.FC = () => {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSelectedImage(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <div style={{ overflowX: "auto" }}>
+      {selectedImage && (
+        <div
+          onClick={() => setSelectedImage(null)}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+            cursor: "pointer",
+          }}
+        >
+          <img
+            src={selectedImage}
+            alt="Full size wind map"
+            style={{ maxWidth: "95%", maxHeight: "95%" }}
+          />
+        </div>
+      )}
       <table style={{ borderCollapse: "collapse", width: "100%" }}>
         <thead>
           <tr>
@@ -106,7 +154,15 @@ const HighWinds2: React.FC = () => {
                   <img
                     src={createWindyImageUrl(elevation, day)}
                     alt={`Wind at ${elevationLabels[elevation]} on ${formatDay(day, index)}`}
-                    style={{ width: "100%", height: "auto", display: "block" }}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      display: "block",
+                      cursor: "pointer",
+                    }}
+                    onClick={() =>
+                      setSelectedImage(createWindyImageUrl(elevation, day))
+                    }
                   />
                 </td>
               ))}
