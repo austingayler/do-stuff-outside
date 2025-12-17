@@ -1,24 +1,19 @@
 import "./App.css";
 import "leaflet/dist/leaflet.css";
-import Passes from "./Passes";
 import { useSyncedLocalStorage } from "./hooks";
-import HighWinds from "./HighWinds";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
-import HighWinds2 from "./HighWinds2";
 import { PassType } from "./types";
 import type { SelectedPass } from "./types";
 import Huts from "./Huts";
-
-const dabsLink = "https://www.skybriefing.com/portal/delegate/dabs?today";
+import { Fly, Ski, Conditions, Furka, Grimsel, Susten, Goeschenen } from "./tabs";
 
 const imgKey = new Date().valueOf();
 
 const queryClient = new QueryClient();
 
 function App() {
-  const [selectedPass, setSelectedPass] = useSyncedLocalStorage<SelectedPass>("selectedPass", null);
-  const [showHighWinds2, setShowHighWinds2] = useState(true);
+  const [selectedPass, setSelectedPass] =
+    useSyncedLocalStorage<SelectedPass>("selectedPass", null);
 
   const handleButtonClick = (pass: PassType) => {
     if (pass === selectedPass) {
@@ -29,12 +24,9 @@ function App() {
   };
 
   return (
-    // TODO: move to provider renderer
     <QueryClientProvider client={queryClient}>
       <div className="w-full flex flex-col justify-center items-center gap-4">
         <h1>DO STUFF OUTSIDE</h1>
-
-        {/* <WeatherSlider /> */}
 
         <a
           href="https://jungfrau.roundshot.co/interlaken-harderkulm/"
@@ -71,6 +63,15 @@ function App() {
           <button
             type="button"
             className={`${
+              selectedPass === PassType.CONDITIONS ? "bg-purple-500" : "bg-gray-500"
+            } hover:bg-purple-700 text-white font-bold py-2 px-4 rounded`}
+            onClick={() => handleButtonClick(PassType.CONDITIONS)}
+          >
+            Conditions
+          </button>
+          <button
+            type="button"
+            className={`${
               selectedPass === PassType.FURKA ? "bg-blue-500" : "bg-gray-500"
             } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
             onClick={() => handleButtonClick(PassType.FURKA)}
@@ -98,7 +99,9 @@ function App() {
           <button
             type="button"
             className={`${
-              selectedPass === PassType.GOESCHENEN ? "bg-blue-500" : "bg-gray-500"
+              selectedPass === PassType.GOESCHENEN
+                ? "bg-blue-500"
+                : "bg-gray-500"
             } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
             onClick={() => handleButtonClick(PassType.GOESCHENEN)}
           >
@@ -115,74 +118,13 @@ function App() {
           </button>
         </div>
 
-        <Passes selectedPass={selectedPass} />
-
-        {/* <WeatherMap /> */}
-
-        {/* <div className="iframeContainer w-full">
-          <iframe
-            style={{
-              pointerEvents: "none",
-            }}
-            width="100%"
-            height="450"
-            src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=mm&metricTemp=°C&metricWind=km/h&zoom=7&overlay=rain&product=ecmwf&level=surface&lat=46.808&lon=8.152&detailLat=44.91813929958517&detailLon=5.998535156250001&marker=true&message=true"
-          ></iframe>
-        </div> */}
-
-        {selectedPass === PassType.FLY && (
-          <>
-            <div className="mobileScrollAdapter">
-              <div className="w-full iframeContainer ">
-                <iframe
-                  title="Winds.mobi"
-                  style={{
-                    width: "100%",
-                    height: 600,
-                  }}
-                  allow="geolocation"
-                  src="https://winds.mobi/stations/list?lat=46.6833&lon=7.8500&zoom=15"
-                />
-              </div>
-            </div>
-            <img
-              src={`https://www.srf.ch/meteo/static/prognosetafeln/wind/FOEHNDIAGRAMM.jpg?cacheKiller=${Date.now()}`}
-              className="w-full object-contain"
-              style={{ maxWidth: 638, maxHeight: 477 }}
-              alt="Foehn diagram"
-            />
-            <img
-              src={
-                "https://www.srf.ch/meteo/static/prognosetafeln/wind/BISENDIAGRAMM.jpg"
-              }
-              className="w-full object-contain"
-              style={{ maxWidth: 638, maxHeight: 477 }}
-              alt="Bise diagram"
-              key={Date.now()}
-            />
-
-            <a
-              target="_blank"
-              href={dabsLink}
-              style={{ fontSize: 72 }}
-              rel="noreferrer"
-            >
-              DABS
-              <sup className="new-tab-icon">↗</sup>
-            </a>
-            {/* <HighWinds /> */}
-
-            <button
-              type="button"
-              onClick={() => setShowHighWinds2(!showHighWinds2)}
-            >
-              Show High Winds 2
-            </button>
-
-            {showHighWinds2 && <HighWinds2 />}
-          </>
-        )}
-        {selectedPass === PassType.SKI && <p>No ski stuff yet</p>}
+        {selectedPass === PassType.FLY && <Fly />}
+        {selectedPass === PassType.SKI && <Ski />}
+        {selectedPass === PassType.CONDITIONS && <Conditions />}
+        {selectedPass === PassType.FURKA && <Furka />}
+        {selectedPass === PassType.GRIMSEL && <Grimsel />}
+        {selectedPass === PassType.SUSTEN && <Susten />}
+        {selectedPass === PassType.GOESCHENEN && <Goeschenen />}
         {selectedPass === PassType.HUT && <Huts />}
       </div>
     </QueryClientProvider>
