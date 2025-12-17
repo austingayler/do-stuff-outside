@@ -1,4 +1,3 @@
-import { useGadmen } from "./hooks";
 import { PassType } from "./types";
 import type { SelectedPass } from "./types";
 
@@ -39,11 +38,13 @@ webcams[PassType.SUSTEN] = [
 ];
 
 const Passes = ({ selectedPass }: { selectedPass: SelectedPass }) => {
-  const gadmen = useGadmen();
   return (
     <>
       {selectedPass && passes[selectedPass] && (
-        <div key={`${selectedPass}alpen-paesse`} className="mobileScrollAdapter">
+        <div
+          key={`${selectedPass}alpen-paesse`}
+          className="mobileScrollAdapter"
+        >
           <iframe
             title="Gadmen iframe"
             style={{
@@ -98,12 +99,15 @@ const Passes = ({ selectedPass }: { selectedPass: SelectedPass }) => {
             className="w-full object-contain"
             alt="webcam"
           />
-          {gadmen}
+          <img
+            src={`https://images.bergfex.at/webcams/?id=11008&format=44&t=${new Date().valueOf()}`}
+            className="w-full object-cover"
+            alt="Gadmen Tälli"
+          />
         </>
       )}
 
-      {
-        selectedPass === PassType.GOESCHENEN && (
+      {selectedPass === PassType.GOESCHENEN && (
         <div key={selectedPass} className="mobileScrollAdapter">
           <iframe
             title="Gadmen iframe"
@@ -117,9 +121,7 @@ const Passes = ({ selectedPass }: { selectedPass: SelectedPass }) => {
             className="rainbowBorder"
           />
         </div>
-
-        )
-      }
+      )}
     </>
   );
 };
