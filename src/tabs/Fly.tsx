@@ -1,5 +1,6 @@
 import { useState } from "react";
 import HighWinds2 from "../HighWinds2";
+import JungfraujochForecast from "../components/JungfraujochForecast";
 
 const dabsLink = "https://www.skybriefing.com/portal/delegate/dabs?today";
 
@@ -51,6 +52,8 @@ const Fly = () => {
       </button>
 
       {showHighWinds2 && <HighWinds2 />}
+
+      <JungfraujochForecast />
     </>
   );
 };
