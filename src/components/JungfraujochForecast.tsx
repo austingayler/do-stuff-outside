@@ -64,10 +64,28 @@ function getFlyCondition(
 
 /**
  * Converts wind direction in degrees to a compass direction string.
+ * Uses 16-point compass for more granular directions.
  */
 function getWindDirectionLabel(degrees: number): string {
-  const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-  const index = Math.round(degrees / 45) % 8;
+  const directions = [
+    "N",
+    "NNE",
+    "NE",
+    "ENE",
+    "E",
+    "ESE",
+    "SE",
+    "SSE",
+    "S",
+    "SSW",
+    "SW",
+    "WSW",
+    "W",
+    "WNW",
+    "NW",
+    "NNW",
+  ];
+  const index = Math.round(degrees / 22.5) % 16;
   return directions[index];
 }
 
@@ -216,7 +234,7 @@ const JungfraujochForecast: React.FC = () => {
   }
 
   return (
-    <div className="p-4" style={{ minWidth: "900px", maxWidth: "900px" }}>
+    <div className="p-4 w-full max-w-4xl mx-auto">
       <h3 className="text-xl font-bold mb-2">Can you fly from Jungfraujoch?</h3>
       <p className="text-sm text-gray-600 mb-4">
         5-day forecast at 3,466m • Good: ≤20 km/h, gusts ≤30, WNW-NNW wind
@@ -229,24 +247,19 @@ const JungfraujochForecast: React.FC = () => {
           const isExpanded = expandedDay === index;
 
           return (
-            <div
-              key={day.date}
-              style={{ minWidth: "900px", maxWidth: "900px" }}
-            >
+            <div key={day.date} className="w-full">
               {/* Day summary row */}
               <button
                 type="button"
                 onClick={() => setExpandedDay(isExpanded ? null : index)}
-                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors"
+                className="w-full flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg hover:bg-gray-100 transition-colors"
                 style={{
                   backgroundColor: isExpanded ? "#f3f4f6" : "transparent",
-                  minWidth: "900px",
-                  maxWidth: "900px",
                 }}
               >
                 {/* Condition indicator */}
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0"
                   style={{ backgroundColor: conditionColors[condition] }}
                 >
                   <span className="text-white text-xs font-bold">
@@ -255,11 +268,11 @@ const JungfraujochForecast: React.FC = () => {
                 </div>
 
                 {/* Day info */}
-                <div className="flex-1 text-left">
-                  <div className="font-semibold">
+                <div className="flex-1 text-left min-w-0">
+                  <div className="font-semibold text-sm sm:text-base">
                     {formatDate(day.date, index)}
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-xs sm:text-sm text-gray-600 truncate">
                     {summary.avgSpeed} km/h{" "}
                     {getWindDirectionLabel(summary.dominantDirection)} • Gusts:{" "}
                     {summary.maxGusts} km/h
@@ -267,15 +280,14 @@ const JungfraujochForecast: React.FC = () => {
                 </div>
 
                 {/* Expand icon */}
-                <div className="text-gray-400">{isExpanded ? "▲" : "▼"}</div>
+                <div className="text-gray-400 text-sm sm:text-base">
+                  {isExpanded ? "▲" : "▼"}
+                </div>
               </button>
 
               {/* Expanded hourly view */}
               {isExpanded && (
-                <div
-                  className="mt-2 mb-4 flex gap-1"
-                  style={{ minWidth: "900px", maxWidth: "900px" }}
-                >
+                <div className="mt-2 mb-4 grid grid-cols-3 sm:grid-cols-5 md:grid-cols-9 gap-1 w-full">
                   {day.hours
                     .filter((h) => {
                       const hour = new Date(h.time).getHours();
@@ -292,15 +304,30 @@ const JungfraujochForecast: React.FC = () => {
                       return (
                         <div
                           key={hour.time}
-                          className="p-2 rounded text-center text-xs flex-1"
+                          className="p-1.5 sm:p-2 rounded text-xs flex items-center gap-1"
                           style={{
                             backgroundColor: conditionColors[hourCondition],
                             color: "white",
                           }}
                         >
-                          <div className="font-bold">{hourTime}:00</div>
-                          <div>{Math.round(hour.windSpeed)} km/h</div>
-                          <div>{getWindDirectionLabel(hour.windDirection)}</div>
+                          {/* Content */}
+                          <div className="flex-1 text-center">
+                            <div className="font-bold">{hourTime}:00</div>
+                            <div>{Math.round(hour.windSpeed)} km/h</div>
+                            <div>
+                              {getWindDirectionLabel(hour.windDirection)}
+                            </div>
+                          </div>
+                          {/* Wind direction arrow */}
+                          <div
+                            className="flex items-center justify-center shrink-0"
+                            style={{
+                              opacity: 0.7,
+                              transform: `rotate(${hour.windDirection}deg)`,
+                            }}
+                          >
+                            <span className="text-xl sm:text-2xl">↓</span>
+                          </div>
                         </div>
                       );
                     })}
