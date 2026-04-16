@@ -66,12 +66,23 @@ async function main() {
   // 2. Fetch summary — dynamically discovers all region IDs + current thermal values
   console.log('[Scraper] Step 2/3: Fetch forecast summary');
   const summary = await getForecastSummary(jwtToken);
-  const { forecastSummaries: thermalForecasts, publishDate, calculationDate } = summary;
+  const { forecastSummaries, publishDate, calculationDate } = summary;
   console.log('[Scraper] Summary publishDate:', publishDate);
   console.log('[Scraper] Summary calculationDate:', calculationDate);
+  console.log('[Scraper] Top-level keys:', Object.keys(summary).join(', '));
+
+  if (!forecastSummaries || !Array.isArray(forecastSummaries) || forecastSummaries.length === 0) {
+    console.error('[Scraper] Unexpected summary shape. Keys:', Object.keys(summary).join(', '));
+    throw new Error('Unexpected getForecastSummary response shape');
+  }
+
+  // forecastSummaries is an array of day objects; use the first (today's) thermalForecasts
+  const todaySummary = forecastSummaries[0];
+  console.log('[Scraper] Today summary keys:', Object.keys(todaySummary).join(', '));
+  const thermalForecasts = todaySummary.thermalForecasts;
 
   if (!thermalForecasts || typeof thermalForecasts !== 'object') {
-    console.error('[Scraper] Unexpected summary shape. Keys:', Object.keys(summary).join(', '));
+    console.error('[Scraper] No thermalForecasts in today summary. Keys:', Object.keys(todaySummary).join(', '));
     throw new Error('Unexpected getForecastSummary response shape');
   }
 
