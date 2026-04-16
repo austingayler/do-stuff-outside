@@ -66,18 +66,21 @@ async function main() {
   // 2. Fetch summary — dynamically discovers all region IDs + current thermal values
   console.log('[Scraper] Step 2/3: Fetch forecast summary');
   const summary = await getForecastSummary(jwtToken);
-  const { thermalForecasts, publishDate, calculateDate } = summary;
+  const { forecastSummaries: thermalForecasts, publishDate, calculationDate } = summary;
   console.log('[Scraper] Summary publishDate:', publishDate);
-  console.log('[Scraper] Summary calculateDate:', calculateDate);
+  console.log('[Scraper] Summary calculationDate:', calculationDate);
 
   if (!thermalForecasts || typeof thermalForecasts !== 'object') {
     console.error('[Scraper] Unexpected summary shape. Keys:', Object.keys(summary).join(', '));
     throw new Error('Unexpected getForecastSummary response shape');
   }
 
-  const regionEntries = Object.values(thermalForecasts);
+  const regionEntries = Array.isArray(thermalForecasts)
+    ? thermalForecasts
+    : Object.values(thermalForecasts);
   console.log(`[Scraper] Found ${regionEntries.length} regions in summary`);
   for (const e of regionEntries) {
+    console.log(`[Scraper]   keys: ${Object.keys(e).join(', ')}`);
     console.log(`[Scraper]   id=${e.id} oneway=${e.oneway}km return=${e.return}km climb=${e.climb}`);
   }
 
@@ -129,7 +132,7 @@ async function main() {
   const summaryPath = path.join(OUTPUT_DIR, 'summary_latest.json');
   await fs.writeFile(
     summaryPath,
-    JSON.stringify({ publishDate, calculateDate, regions: regionSummaries, _scrapedAt: new Date().toISOString() }, null, 2)
+    JSON.stringify({ publishDate, calculationDate, regions: regionSummaries, _scrapedAt: new Date().toISOString() }, null, 2)
   );
   console.log('[Scraper] Saved summary:', summaryPath);
   console.log('[Scraper] Regions in summary:', Object.keys(regionSummaries).join(', '));
