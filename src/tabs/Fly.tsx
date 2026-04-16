@@ -56,11 +56,7 @@ const Fly = () => {
 
       <JungfraujochForecast />
 
-      <RegionForecastMap
-        onRegionClick={(regionName) => {
-          console.log("Region clicked:", regionName);
-        }}
-      />
+      <RegionForecastMap />
     </>
   );
 };

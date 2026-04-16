@@ -14,8 +14,9 @@ interface RegionInfo {
   climb: number;
 }
 
-interface Props {
-  onRegionClick?: (regionName: string) => void;
+interface SummaryDay {
+  date: string;
+  regions: Record<string, RegionInfo>;
 }
 
 const DEFAULT_STYLE: PathOptions = {
@@ -32,17 +33,23 @@ const HOVER_STYLE: PathOptions = {
   weight: 2.5,
 };
 
-const LOADING_STYLE: PathOptions = {
-  fillColor: "#aaaaaa",
-  fillOpacity: 0.4,
-  color: "#888888",
-  weight: 1.5,
+const SELECTED_STYLE: PathOptions = {
+  fillColor: "#e879a8",
+  fillOpacity: 0.75,
+  color: "#e879a8",
+  weight: 2.5,
 };
 
-/** Scale fillOpacity by oneway km: dim at 0km, saturated at 250km+. */
 function thermalStyle(oneway: number): PathOptions {
   const ratio = Math.min(1, Math.max(0, oneway / 250));
   return { ...DEFAULT_STYLE, fillOpacity: 0.1 + ratio * 0.55 };
+}
+
+function formatDayLabel(dateStr: string, index: number): string {
+  const date = new Date(dateStr);
+  if (index === 0) return "Today";
+  if (index === 1) return "Tomorrow";
+  return date.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
 }
 
 type StyledLayer = Layer & {
@@ -50,7 +57,6 @@ type StyledLayer = Layer & {
   bindTooltip: (content: string | (() => string), options?: object) => void;
 };
 
-/** Renders a raw SVG string imperatively to avoid lint restrictions on dangerouslySetInnerHTML. */
 function SvgChart({ svg }: { svg: string }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -59,82 +65,69 @@ function SvgChart({ svg }: { svg: string }) {
   return <div ref={ref} style={{ width: "100%", overflowX: "auto" }} />;
 }
 
-export function RegionForecastMap({ onRegionClick }: Props) {
-  const [modalRegion, setModalRegion] = useState<string | null>(null);
-  const [modalChart, setModalChart] = useState<string | null>(null);
-  const [modalChartLoading, setModalChartLoading] = useState(false);
-  const [forecastSummary, setForecastSummary] = useState<Record<string, RegionInfo> | null>(null);
+export function RegionForecastMap() {
+  const [days, setDays] = useState<SummaryDay[]>([]);
+  const [selectedDayIndex, setSelectedDayIndex] = useState(0);
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [chart, setChart] = useState<string | null>(null);
+  const [chartLoading, setChartLoading] = useState(false);
 
-  const loadingRegionRef = useRef<string | null>(null);
-  const onRegionClickRef = useRef(onRegionClick);
-  onRegionClickRef.current = onRegionClick;
-  const forecastSummaryRef = useRef<Record<string, RegionInfo> | null>(null);
+  const selectedDayRef = useRef(0);
+  const selectedRegionRef = useRef<string | null>(null);
+  const daysRef = useRef<SummaryDay[]>([]);
   const thermalStyleMap = useRef(new Map<string, PathOptions>());
   const layerMap = useRef(new Map<string, StyledLayer>());
 
-  // Fetch thermal summary on mount for tooltip values + shading
+  // Fetch summary on mount
   useEffect(() => {
     fetch(`${XCTHERM_DATA_BASE}/summary_latest.json`)
       .then((r) => (r.ok ? r.json() : null))
-      .then((data: { regions?: Record<string, RegionInfo> } | null) => {
-        if (!data?.regions) return;
-        forecastSummaryRef.current = data.regions;
-        setForecastSummary(data.regions);
+      .then((data: { days?: SummaryDay[] } | null) => {
+        if (!data?.days?.length) return;
+        daysRef.current = data.days;
+        setDays(data.days);
       })
       .catch(() => {});
   }, []);
 
-  // Apply thermal shading to all layers once summary is loaded
+  // Re-shade map when day changes or selected region changes
   useEffect(() => {
-    if (!forecastSummary) return;
+    const dayRegions = days[selectedDayIndex]?.regions;
+    if (!dayRegions) return;
     for (const [name, layer] of layerMap.current) {
-      const info = forecastSummary[name];
-      if (info) {
-        const style = thermalStyle(info.oneway);
+      if (name === selectedRegion) {
+        layer.setStyle(SELECTED_STYLE);
+      } else {
+        const info = dayRegions[name];
+        const style = info ? thermalStyle(info.oneway) : DEFAULT_STYLE;
         thermalStyleMap.current.set(name, style);
-        if (loadingRegionRef.current !== name) {
-          layer.setStyle(style);
-        }
+        layer.setStyle(style);
       }
     }
-  }, [forecastSummary]);
+  }, [days, selectedDayIndex, selectedRegion]);
 
-  // Fetch SVG chart whenever the modal opens
+  // Fetch chart when region or day changes
   useEffect(() => {
-    if (!modalRegion) {
-      setModalChart(null);
-      return;
-    }
-    const forecastId = forecastSummaryRef.current?.[modalRegion]?.forecastId;
-    if (!forecastId) { setModalChart(null); return; }
-    setModalChartLoading(true);
+    if (!selectedRegion) { setChart(null); return; }
+    const forecastId = daysRef.current[selectedDayIndex]?.regions[selectedRegion]?.forecastId;
+    if (!forecastId) { setChart(null); return; }
+    setChartLoading(true);
+    setChart(null);
     fetch(`${XCTHERM_DATA_BASE}/${forecastId}_latest.json`)
       .then((r) => (r.ok ? r.json() : null))
-      .then((data: { chart?: string } | null) => setModalChart(data?.chart ?? null))
-      .catch(() => setModalChart(null))
-      .finally(() => setModalChartLoading(false));
-  }, [modalRegion]);
+      .then((data: { chart?: string } | null) => setChart(data?.chart ?? null))
+      .catch(() => setChart(null))
+      .finally(() => setChartLoading(false));
+  }, [selectedRegion, selectedDayIndex]);
 
   const onEachFeature = useCallback((feature: Feature, layer: Layer) => {
     const name = feature.properties?.name as string;
     const l = layer as StyledLayer;
     layerMap.current.set(name, l);
 
-    const setLoading = (target: string | null) => {
-      if (loadingRegionRef.current) {
-        const prev = loadingRegionRef.current;
-        layerMap.current.get(prev)?.setStyle(thermalStyleMap.current.get(prev) ?? DEFAULT_STYLE);
-      }
-      loadingRegionRef.current = target;
-      if (target) {
-        layerMap.current.get(target)?.setStyle(LOADING_STYLE);
-      }
-    };
-
-    // Tooltip content is evaluated at mouseover time so it picks up async summary data
     l.bindTooltip(
       () => {
-        const info = forecastSummaryRef.current?.[name];
+        const info = daysRef.current[selectedDayRef.current]?.regions[name];
         return info != null ? `${name} (${info.oneway}km)` : name;
       },
       { sticky: true, className: "region-tooltip" }
@@ -142,105 +135,99 @@ export function RegionForecastMap({ onRegionClick }: Props) {
 
     l.on({
       mouseover() {
-        if (loadingRegionRef.current !== name) l.setStyle(HOVER_STYLE);
+        if (name !== selectedRegionRef.current) l.setStyle(HOVER_STYLE);
       },
       mouseout() {
-        if (loadingRegionRef.current !== name) {
+        if (name !== selectedRegionRef.current) {
           l.setStyle(thermalStyleMap.current.get(name) ?? DEFAULT_STYLE);
         }
       },
       click() {
-        if (loadingRegionRef.current) return;
-        setModalRegion(name);
-        const cb = onRegionClickRef.current;
-        if (cb) {
-          setLoading(name);
-          Promise.resolve(cb(name)).finally(() => setLoading(null));
+        const prev = selectedRegionRef.current;
+        if (prev && prev !== name) {
+          layerMap.current.get(prev)?.setStyle(thermalStyleMap.current.get(prev) ?? DEFAULT_STYLE);
         }
+        selectedRegionRef.current = name;
+        l.setStyle(SELECTED_STYLE);
+        setSelectedRegion(name);
       },
     });
   }, []);
 
-  return (
-    <>
-      <MapContainer
-        center={[46.6, 8.0]}
-        zoom={8}
-        style={{ height: 400, width: "100%" }}
-        scrollWheelZoom={false}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <GeoJSON
-          data={regionsData as FeatureCollection}
-          style={DEFAULT_STYLE}
-          onEachFeature={onEachFeature}
-        />
-      </MapContainer>
+  const currentDayRegions = days[selectedDayIndex]?.regions ?? {};
 
-      {modalRegion && (
-        <div
-          aria-label={`${modalRegion} forecast backdrop`}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.6)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 10000,
-          }}
-          onClick={() => setModalRegion(null)}
-          onKeyDown={(e) => e.key === "Escape" && setModalRegion(null)}
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, padding: "0 16px" }}>
+      {/* Compact map + day buttons */}
+      <div style={{ width: "100%", maxWidth: 420 }}>
+        {days.length > 0 && (
+          <div style={{ display: "flex", gap: 6, marginBottom: 8, flexWrap: "wrap" }}>
+            {days.map((day, i) => (
+              <button
+                key={day.date}
+                type="button"
+                onClick={() => {
+                  selectedDayRef.current = i;
+                  setSelectedDayIndex(i);
+                }}
+                style={{
+                  padding: "3px 10px",
+                  borderRadius: 4,
+                  border: `1.5px solid ${i === selectedDayIndex ? "#e879a8" : "#555"}`,
+                  background: i === selectedDayIndex ? "#3a1a2a" : "transparent",
+                  color: i === selectedDayIndex ? "#e879a8" : "#aaa",
+                  cursor: "pointer",
+                  fontSize: "0.78em",
+                  fontWeight: i === selectedDayIndex ? 600 : 400,
+                }}
+              >
+                {formatDayLabel(day.date, i)}
+              </button>
+            ))}
+          </div>
+        )}
+        <MapContainer
+          center={[46.55, 7.9]}
+          zoom={8}
+          style={{ height: 260, width: "100%", borderRadius: 6, cursor: "pointer" }}
+          scrollWheelZoom={false}
+          zoomControl={false}
+          dragging={false}
+          doubleClickZoom={false}
+          touchZoom={false}
+          keyboard={false}
+          attributionControl={false}
         >
-          <dialog
-            open
-            style={{
-              background: "#2a2a2a",
-              border: "1px solid #444",
-              borderRadius: 8,
-              padding: 24,
-              minWidth: 320,
-              maxWidth: 700,
-              width: "90%",
-              color: "inherit",
-              maxHeight: "90vh",
-              overflowY: "auto",
-            }}
-            onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}
-          >
-            <h2 style={{ marginTop: 0, color: "#e879a8" }}>
-              {modalRegion}
-              {forecastSummary?.[modalRegion] && (
-                <span
-                  style={{
-                    color: "#aaa",
-                    fontWeight: "normal",
-                    fontSize: "0.65em",
-                    marginLeft: 12,
-                  }}
-                >
-                  {forecastSummary[modalRegion].oneway}km oneway ·{" "}
-                  {forecastSummary[modalRegion].return}km return
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <GeoJSON
+            data={regionsData as FeatureCollection}
+            style={DEFAULT_STYLE}
+            onEachFeature={onEachFeature}
+          />
+        </MapContainer>
+      </div>
+
+      {/* Inline chart */}
+      <div style={{ width: "100%", maxWidth: 700, textAlign: "center" }}>
+        {selectedRegion ? (
+          <>
+            <div style={{ marginBottom: 8, fontWeight: 600, color: "#e879a8" }}>
+              {selectedRegion}
+              {currentDayRegions[selectedRegion] && (
+                <span style={{ color: "#aaa", fontWeight: "normal", fontSize: "0.85em", marginLeft: 10 }}>
+                  {currentDayRegions[selectedRegion].oneway}km oneway &middot;{" "}
+                  {currentDayRegions[selectedRegion].return}km return
                 </span>
               )}
-            </h2>
-
-            {modalChartLoading && <p style={{ color: "#aaa" }}>Loading forecast chart...</p>}
-            {!modalChartLoading && !modalChart && (
-              <p style={{ color: "#aaa" }}>No forecast data available yet.</p>
-            )}
-            {!modalChartLoading && modalChart && <SvgChart svg={modalChart} />}
-
-            <button type="button" onClick={() => setModalRegion(null)} style={{ marginTop: 16 }}>
-              Close
-            </button>
-          </dialog>
-        </div>
-      )}
-    </>
+            </div>
+            {chartLoading && <p style={{ color: "#aaa" }}>Loading...</p>}
+            {!chartLoading && chart && <SvgChart svg={chart} />}
+            {!chartLoading && !chart && <p style={{ color: "#555" }}>No chart available.</p>}
+          </>
+        ) : (
+          <p style={{ color: "#555", fontSize: "0.9em" }}>Click a region to view the forecast</p>
+        )}
+      </div>
+    </div>
   );
 }

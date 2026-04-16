@@ -63,94 +63,95 @@ async function main() {
   await fs.mkdir(OUTPUT_DIR, { recursive: true });
   console.log('[Scraper] Output directory ready:', OUTPUT_DIR);
 
-  // 2. Fetch summary — dynamically discovers all region IDs + current thermal values
   console.log('[Scraper] Step 2/3: Fetch forecast summary');
   const summary = await getForecastSummary(jwtToken);
   const { forecastSummaries, publishDate, calculationDate } = summary;
   console.log('[Scraper] Summary publishDate:', publishDate);
   console.log('[Scraper] Summary calculationDate:', calculationDate);
-  console.log('[Scraper] Top-level keys:', Object.keys(summary).join(', '));
 
   if (!forecastSummaries || !Array.isArray(forecastSummaries) || forecastSummaries.length === 0) {
     console.error('[Scraper] Unexpected summary shape. Keys:', Object.keys(summary).join(', '));
     throw new Error('Unexpected getForecastSummary response shape');
   }
 
-  // forecastSummaries is an array of day objects; use the first (today's) thermalForecasts
-  const todaySummary = forecastSummaries[0];
-  console.log('[Scraper] Today summary keys:', Object.keys(todaySummary).join(', '));
-  const thermalForecasts = todaySummary.thermalForecasts;
+  console.log(`[Scraper] Found ${forecastSummaries.length} forecast days`);
 
-  if (!thermalForecasts || typeof thermalForecasts !== 'object') {
-    console.error('[Scraper] No thermalForecasts in today summary. Keys:', Object.keys(todaySummary).join(', '));
-    throw new Error('Unexpected getForecastSummary response shape');
-  }
+  // Step 3: fetch all days
+  console.log('[Scraper] Step 3/3: Fetch per-region detail for all days');
+  const days = [];
+  const seenForecastIds = new Set();
+  let totalSuccess = 0;
 
-  const regionEntries = Array.isArray(thermalForecasts)
-    ? thermalForecasts
-    : Object.values(thermalForecasts);
-  console.log(`[Scraper] Found ${regionEntries.length} regions in summary`);
-  for (const e of regionEntries) {
-    console.log(`[Scraper]   keys: ${Object.keys(e).join(', ')}`);
-    console.log(`[Scraper]   id=${e.id} oneway=${e.oneway}km return=${e.return}km climb=${e.climb}`);
-  }
+  for (let dayIndex = 0; dayIndex < forecastSummaries.length; dayIndex++) {
+    const daySummary = forecastSummaries[dayIndex];
+    const { date } = daySummary;
+    const thermalForecasts = daySummary.thermalForecasts;
+    console.log(`[Scraper] --- Day ${dayIndex}: ${date} ---`);
 
-  // 3. For each region, fetch detailed forecast (includes SVG chart)
-  console.log('[Scraper] Step 3/3: Fetch per-region detail');
-  const regionSummaries = {};
-  let successCount = 0;
-
-  for (const entry of regionEntries) {
-    const { id: forecastId, oneway, return: returnKm, climb } = entry;
-    console.log(`[Scraper] --- Fetching forecastId ${forecastId} ---`);
-    try {
-      const data = await getForecastData(jwtToken, forecastId);
-      const { regionName, textForecast, chart } = data;
-      console.log(`[Scraper]   regionName: "${regionName}"`);
-      console.log(`[Scraper]   chart length: ${chart?.length ?? 0} chars`);
-      console.log(`[Scraper]   textForecast length: ${textForecast?.length ?? 0} chars`);
-
-      if (!regionName) {
-        console.warn(`[Scraper]   WARNING: no regionName for forecastId ${forecastId}, skipping`);
-        continue;
-      }
-
-      const outPath = path.join(OUTPUT_DIR, `${forecastId}_latest.json`);
-      await fs.writeFile(
-        outPath,
-        JSON.stringify(
-          { regionName, forecastId, oneway, return: returnKm, climb, textForecast, chart, publishDate, _scrapedAt: new Date().toISOString() },
-          null, 2
-        )
-      );
-      console.log(`[Scraper]   Saved: ${outPath}`);
-
-      regionSummaries[regionName] = { forecastId, oneway, return: returnKm, climb };
-      successCount++;
-    } catch (err) {
-      console.error(`[Scraper]   ERROR for forecastId ${forecastId}: ${err.message}`);
-      if (err.response) {
-        console.error(`[Scraper]   HTTP status: ${err.response.status}`);
-        console.error(`[Scraper]   Response body: ${JSON.stringify(err.response.data)}`);
-      }
-      process.exitCode = 1;
+    if (!thermalForecasts || typeof thermalForecasts !== 'object') {
+      console.warn(`[Scraper]   No thermalForecasts for day ${dayIndex}, skipping`);
+      continue;
     }
+
+    const regionEntries = Array.isArray(thermalForecasts)
+      ? thermalForecasts
+      : Object.values(thermalForecasts);
+
+    const dayRegions = {};
+
+    for (const entry of regionEntries) {
+      const { id: forecastId, oneway, return: returnKm, climb } = entry;
+
+      // Only fetch the chart once per unique forecastId (different days have different IDs)
+      if (!seenForecastIds.has(forecastId)) {
+        seenForecastIds.add(forecastId);
+        try {
+          const data = await getForecastData(jwtToken, forecastId);
+          const { regionName, textForecast, chart } = data;
+          if (!regionName) { console.warn(`[Scraper]   No regionName for ${forecastId}`); continue; }
+          const outPath = path.join(OUTPUT_DIR, `${forecastId}_latest.json`);
+          await fs.writeFile(
+            outPath,
+            JSON.stringify({ regionName, forecastId, oneway, return: returnKm, climb, textForecast, chart, publishDate, _scrapedAt: new Date().toISOString() }, null, 2)
+          );
+          console.log(`[Scraper]   Saved ${forecastId}_latest.json → ${regionName} (${oneway}km oneway)`);
+          dayRegions[regionName] = { forecastId, oneway, return: returnKm, climb };
+          totalSuccess++;
+        } catch (err) {
+          console.error(`[Scraper]   ERROR fetching ${forecastId}: ${err.message}`);
+          if (err.response) console.error(`[Scraper]   HTTP ${err.response.status}: ${JSON.stringify(err.response.data)}`);
+          process.exitCode = 1;
+        }
+      } else {
+        // Already fetched — still include in day summary using cached name lookup
+        // We need the regionName; re-use from a previously-saved file if possible
+        try {
+          const cached = JSON.parse(await fs.readFile(path.join(OUTPUT_DIR, `${forecastId}_latest.json`), 'utf-8'));
+          dayRegions[cached.regionName] = { forecastId, oneway, return: returnKm, climb };
+        } catch { /* skip if not found */ }
+      }
+    }
+
+    days.push({ date, regions: dayRegions });
+    console.log(`[Scraper]   Day ${dayIndex} regions: ${Object.keys(dayRegions).join(', ')}`);
   }
 
-  console.log(`[Scraper] Fetched ${successCount}/${regionEntries.length} regions successfully`);
+  console.log(`[Scraper] Fetched ${totalSuccess} unique forecast files across ${forecastSummaries.length} days`);
 
-  // Save lightweight summary (no chart data — used for map shading + tooltips)
+  // Save multi-day summary (no chart data — used for map shading, tooltips, day buttons)
   const summaryPath = path.join(OUTPUT_DIR, 'summary_latest.json');
   await fs.writeFile(
     summaryPath,
-    JSON.stringify({ publishDate, calculationDate, regions: regionSummaries, _scrapedAt: new Date().toISOString() }, null, 2)
+    JSON.stringify({ publishDate, calculationDate, days, _scrapedAt: new Date().toISOString() }, null, 2)
   );
   console.log('[Scraper] Saved summary:', summaryPath);
-  console.log('[Scraper] Regions in summary:', Object.keys(regionSummaries).join(', '));
   console.log('[Scraper] ========================================');
   console.log('[Scraper] Done at', new Date().toISOString());
   console.log('[Scraper] ========================================');
 }
+  console.log('[Scraper] Time:', new Date().toISOString());
+  console.log('[Scraper] OUTPUT_DIR:', OUTPUT_DIR);
+  console.log('[Scraper] ========================================');
 
 main().catch((err) => {
   console.error('[Scraper] Fatal error:', err.message);
