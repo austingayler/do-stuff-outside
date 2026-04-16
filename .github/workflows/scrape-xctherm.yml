@@ -59,7 +59,7 @@ jobs:
           XCTHERM_PASSWORD: ${{ secrets.XCTHERM_PASSWORD }}
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
           PUPPETEER_EXECUTABLE_PATH: '/usr/bin/chromium-browser'
-          FORECAST_DATA_PATH: 'server/xctherm/forecasts'
+          FORECAST_DATA_PATH: '${{ github.workspace }}/server/xctherm/forecasts'
         run: cd server/xctherm && node run.js
 
       - name: List generated forecasts
@@ -71,6 +71,6 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout --orphan xctherm-data-temp
           git reset
-          git add server/xctherm/forecasts/ -f
+          git add server/xctherm/forecasts/
           git commit -m "XCTherm forecast data $(date -u +%Y-%m-%dT%H:%M:%SZ)" || echo "No changes to commit"
           git push origin xctherm-data-temp:xctherm-data --force
