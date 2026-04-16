@@ -41,10 +41,14 @@ async function fetchJwtFromRefreshToken(refreshToken) {
   const keys = Object.keys(response.data || {});
   console.log('[Auth] Response keys:', keys.join(', ') || '(none)');
 
-  const { jwtToken } = response.data;
+  const { jwtToken, error: apiError } = response.data;
+  console.log('[Auth] jwtToken type:', typeof jwtToken, '| length:', jwtToken?.length ?? 'n/a');
+  if (apiError) console.log('[Auth] API error field:', apiError);
+
   if (!jwtToken) {
     throw new Error(
-      `refresh-token response had no jwtToken. Keys present: ${keys.join(', ')}`
+      `refresh-token returned no JWT. API error: "${apiError ?? 'none'}". ` +
+      'The refresh token may be expired — get a fresh one from xctherm.com cookies and update the XCTHERM_REFRESH_TOKEN secret.'
     );
   }
   console.log('[Auth] JWT obtained successfully. Length:', jwtToken.length, 'chars');
