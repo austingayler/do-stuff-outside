@@ -51,16 +51,16 @@ async function loginWithPuppeteer(email, password) {
     await page.goto(LOGIN_URL, { waitUntil: 'networkidle2', timeout: 45000 });
     console.log('[Auth] Page loaded. Title:', await page.title());
 
-    // Multi-strategy login button click
+    // Multi-strategy login button click — use JS .click() to bypass visibility checks
     console.log('[Auth] Looking for login button...');
     let clicked = false;
 
-    // Strategy 1: known selector
+    // Strategy 1: known selectors, JS click bypasses viewport/visibility constraints
     for (const sel of ['.btn-2 a[href*="loginButtonClick"]', '.btn-2 a', '[href*="loginButtonClick"]']) {
       const el = await page.$(sel);
       if (el) {
-        console.log('[Auth] Clicking login button via selector:', sel);
-        await el.click();
+        console.log('[Auth] Found login button via selector:', sel, '— clicking via JS...');
+        await el.evaluate((node) => node.click());
         clicked = true;
         break;
       }
@@ -76,21 +76,16 @@ async function loginWithPuppeteer(email, password) {
       if (ok) { clicked = true; console.log('[Auth] loginButtonClick() called via JS'); }
     }
 
-    // Strategy 3: find by text content
+    // Strategy 3: find by text content, JS click
     if (!clicked) {
       console.log('[Auth] Searching for login link by text...');
-      const handle = await page.evaluateHandle(() => {
+      clicked = await page.evaluate(() => {
         for (const el of document.querySelectorAll('a, button')) {
-          if (/^log ?in$/i.test(el.textContent.trim())) return el;
+          if (/^log ?in$/i.test(el.textContent.trim())) { el.click(); return true; }
         }
-        return null;
+        return false;
       });
-      const el = handle.asElement();
-      if (el) {
-        await el.click();
-        clicked = true;
-        console.log('[Auth] Clicked login element found by text');
-      }
+      if (clicked) console.log('[Auth] Clicked login element found by text');
     }
 
     if (!clicked) {
@@ -119,7 +114,7 @@ async function loginWithPuppeteer(email, password) {
 
     console.log('[Auth] Submitting login form...');
     await Promise.all([
-      submitBtn.click(),
+      submitBtn.evaluate((el) => el.click()),
       page.waitForResponse(
         (r) => r.url().includes('/api/accounts/refresh-token'),
         { timeout: 20000 }
