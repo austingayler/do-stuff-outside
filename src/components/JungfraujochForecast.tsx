@@ -118,12 +118,14 @@ function getDayBestCondition(day: JungfraujochForecastDay): FlyCondition {
 }
 
 /**
- * Gets average wind values for a day during flying hours (9am-5pm).
+ * Gets wind summary values for a day during flying hours (9am-5pm).
  */
 function getDayWindSummary(day: JungfraujochForecastDay): {
-  avgSpeed: number;
-  dominantDirection: number;
+  minSpeed: number;
+  maxSpeed: number;
+  minGusts: number;
   maxGusts: number;
+  directions: Set<string>;
 } {
   const flyingHours = day.hours.filter((h) => {
     const hour = new Date(h.time).getHours();
@@ -132,18 +134,84 @@ function getDayWindSummary(day: JungfraujochForecastDay): {
 
   const hoursToUse = flyingHours.length > 0 ? flyingHours : day.hours;
 
-  const avgSpeed =
-    hoursToUse.reduce((sum, h) => sum + h.windSpeed, 0) / hoursToUse.length;
-  const avgDirection =
-    hoursToUse.reduce((sum, h) => sum + h.windDirection, 0) / hoursToUse.length;
-  const maxGusts = Math.max(...hoursToUse.map((h) => h.windGusts));
+  const speeds = hoursToUse.map((h) => h.windSpeed);
+  const gusts = hoursToUse.map((h) => h.windGusts);
+  const minSpeed = Math.min(...speeds);
+  const maxSpeed = Math.max(...speeds);
+  const minGusts = Math.min(...gusts);
+  const maxGusts = Math.max(...gusts);
+  
+  // Collect all unique 8-point compass directions for the day
+  const directions = new Set<string>();
+  for (const h of hoursToUse) {
+    directions.add(get8PointDirection(h.windDirection));
+  }
 
   return {
-    avgSpeed: Math.round(avgSpeed),
-    dominantDirection: Math.round(avgDirection),
+    minSpeed: Math.round(minSpeed),
+    maxSpeed: Math.round(maxSpeed),
+    minGusts: Math.round(minGusts),
     maxGusts: Math.round(maxGusts),
+    directions,
   };
 }
+
+/**
+ * Converts degrees to 8-point compass direction for the compass display.
+ */
+function get8PointDirection(degrees: number): string {
+  const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+  const index = Math.round(degrees / 45) % 8;
+  return directions[index];
+}
+
+/**
+ * Mini compass component showing wind directions for the day.
+ */
+const WindCompass: React.FC<{ directions: Set<string> }> = ({ directions }) => {
+  const allDirections = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+  const size = 32;
+  const center = size / 2;
+  const outerRadius = 14;
+  const innerRadius = 5;
+
+  // Create path for each compass segment (pizza slice)
+  const getSegmentPath = (index: number): string => {
+    const startAngle = (index * 45 - 22.5 - 90) * (Math.PI / 180);
+    const endAngle = (index * 45 + 22.5 - 90) * (Math.PI / 180);
+    
+    const x1 = center + innerRadius * Math.cos(startAngle);
+    const y1 = center + innerRadius * Math.sin(startAngle);
+    const x2 = center + outerRadius * Math.cos(startAngle);
+    const y2 = center + outerRadius * Math.sin(startAngle);
+    const x3 = center + outerRadius * Math.cos(endAngle);
+    const y3 = center + outerRadius * Math.sin(endAngle);
+    const x4 = center + innerRadius * Math.cos(endAngle);
+    const y4 = center + innerRadius * Math.sin(endAngle);
+    
+    return `M ${x1} ${y1} L ${x2} ${y2} A ${outerRadius} ${outerRadius} 0 0 1 ${x3} ${y3} L ${x4} ${y4} A ${innerRadius} ${innerRadius} 0 0 0 ${x1} ${y1} Z`;
+  };
+
+  return (
+    <svg width={size} height={size} className="shrink-0" aria-label="Wind directions compass">
+      <title>Wind directions</title>
+      {allDirections.map((dir, i) => {
+        const isActive = directions.has(dir);
+        return (
+          <path
+            key={dir}
+            d={getSegmentPath(i)}
+            fill={isActive ? "#3b82f6" : "#e5e7eb"}
+            stroke="#fff"
+            strokeWidth="0.5"
+          />
+        );
+      })}
+      {/* Center circle */}
+      <circle cx={center} cy={center} r={innerRadius - 1} fill="#fff" />
+    </svg>
+  );
+};
 
 function formatDate(dateString: string, index: number): string {
   const date = new Date(dateString);
@@ -273,11 +341,13 @@ const JungfraujochForecast: React.FC = () => {
                     {formatDate(day.date, index)}
                   </div>
                   <div className="text-xs sm:text-sm text-gray-600 truncate">
-                    {summary.avgSpeed} km/h{" "}
-                    {getWindDirectionLabel(summary.dominantDirection)} • Gusts:{" "}
-                    {summary.maxGusts} km/h
+                    {summary.minSpeed}-{summary.maxSpeed} km/h • Gusts:{" "}
+                    {summary.minGusts}-{summary.maxGusts} km/h
                   </div>
                 </div>
+
+                {/* Wind direction compass */}
+                <WindCompass directions={summary.directions} />
 
                 {/* Expand icon */}
                 <div className="text-gray-400 text-sm sm:text-base">
@@ -313,7 +383,7 @@ const JungfraujochForecast: React.FC = () => {
                           {/* Content */}
                           <div className="flex-1 text-center">
                             <div className="font-bold">{hourTime}:00</div>
-                            <div>{Math.round(hour.windSpeed)} km/h</div>
+                            <div>{Math.round(hour.windSpeed)} ({Math.round(hour.windGusts)})</div>
                             <div>
                               {getWindDirectionLabel(hour.windDirection)}
                             </div>

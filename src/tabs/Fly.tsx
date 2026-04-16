@@ -1,6 +1,7 @@
 import { useState } from "react";
 import HighWinds2 from "../HighWinds2";
 import JungfraujochForecast from "../components/JungfraujochForecast";
+import { RegionForecastMap } from "../components/RegionForecastMap";
 
 const dabsLink = "https://www.skybriefing.com/portal/delegate/dabs?today";
 
@@ -54,6 +55,12 @@ const Fly = () => {
       {showHighWinds2 && <HighWinds2 />}
 
       <JungfraujochForecast />
+
+      <RegionForecastMap
+        onRegionClick={(regionName) => {
+          console.log("Region clicked:", regionName);
+        }}
+      />
     </>
   );
 };
