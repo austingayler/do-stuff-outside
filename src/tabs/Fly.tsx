@@ -56,7 +56,9 @@ const Fly = () => {
 
       <JungfraujochForecast />
 
-      <RegionForecastMap />
+      <div className="w-full">
+        <RegionForecastMap />
+      </div>
     </>
   );
 };

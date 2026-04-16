@@ -57,12 +57,19 @@ type StyledLayer = Layer & {
   bindTooltip: (content: string | (() => string), options?: object) => void;
 };
 
-function SvgChart({ svg }: { svg: string }) {
+function SvgChart({ svg, loading }: { svg: string; loading: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (ref.current) ref.current.innerHTML = svg;
+    if (!ref.current) return;
+    ref.current.innerHTML = svg;
+    const svgEl = ref.current.querySelector("svg");
+    if (svgEl) {
+      svgEl.setAttribute("width", "100%");
+      svgEl.setAttribute("height", "auto");
+      svgEl.style.display = "block";
+    }
   }, [svg]);
-  return <div ref={ref} style={{ width: "100%", overflowX: "auto" }} />;
+  return <div ref={ref} style={{ width: "100%", opacity: loading ? 0.4 : 1, transition: "opacity 0.2s" }} />;
 }
 
 export function RegionForecastMap() {
@@ -112,7 +119,6 @@ export function RegionForecastMap() {
     const forecastId = daysRef.current[selectedDayIndex]?.regions[selectedRegion]?.forecastId;
     if (!forecastId) { setChart(null); return; }
     setChartLoading(true);
-    setChart(null);
     fetch(`${XCTHERM_DATA_BASE}/${forecastId}_latest.json`)
       .then((r) => (r.ok ? r.json() : null))
       .then((data: { chart?: string } | null) => setChart(data?.chart ?? null))
@@ -157,11 +163,11 @@ export function RegionForecastMap() {
   const currentDayRegions = days[selectedDayIndex]?.regions ?? {};
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, padding: "0 16px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       {/* Compact map + day buttons */}
-      <div style={{ width: "100%", maxWidth: 420 }}>
+      <div style={{ width: "100%" }}>
         {days.length > 0 && (
-          <div style={{ display: "flex", gap: 6, marginBottom: 8, flexWrap: "wrap" }}>
+          <div className="flex gap-2 justify-center flex-wrap mb-2">
             {days.map((day, i) => (
               <button
                 key={day.date}
@@ -170,16 +176,9 @@ export function RegionForecastMap() {
                   selectedDayRef.current = i;
                   setSelectedDayIndex(i);
                 }}
-                style={{
-                  padding: "3px 10px",
-                  borderRadius: 4,
-                  border: `1.5px solid ${i === selectedDayIndex ? "#e879a8" : "#555"}`,
-                  background: i === selectedDayIndex ? "#3a1a2a" : "transparent",
-                  color: i === selectedDayIndex ? "#e879a8" : "#aaa",
-                  cursor: "pointer",
-                  fontSize: "0.78em",
-                  fontWeight: i === selectedDayIndex ? 600 : 400,
-                }}
+                className={`${
+                  i === selectedDayIndex ? "bg-purple-500" : "bg-gray-500"
+                } hover:bg-purple-700 text-white font-bold py-2 px-4 rounded`}
               >
                 {formatDayLabel(day.date, i)}
               </button>
@@ -189,7 +188,7 @@ export function RegionForecastMap() {
         <MapContainer
           center={[46.55, 7.9]}
           zoom={8}
-          style={{ height: 260, width: "100%", borderRadius: 6, cursor: "pointer" }}
+          style={{ height: "clamp(320px, 60vw, 600px)", width: "100%", borderRadius: 6, cursor: "pointer" }}
           scrollWheelZoom={false}
           zoomControl={false}
           dragging={false}
@@ -208,7 +207,7 @@ export function RegionForecastMap() {
       </div>
 
       {/* Inline chart */}
-      <div style={{ width: "100%", maxWidth: 700, textAlign: "center" }}>
+      <div style={{ width: "100%", textAlign: "center" }}>
         {selectedRegion ? (
           <>
             <div style={{ marginBottom: 8, fontWeight: 600, color: "#e879a8" }}>
@@ -220,8 +219,7 @@ export function RegionForecastMap() {
                 </span>
               )}
             </div>
-            {chartLoading && <p style={{ color: "#aaa" }}>Loading...</p>}
-            {!chartLoading && chart && <SvgChart svg={chart} />}
+            {chart && <SvgChart svg={chart} loading={chartLoading} />}
             {!chartLoading && !chart && <p style={{ color: "#555" }}>No chart available.</p>}
           </>
         ) : (
