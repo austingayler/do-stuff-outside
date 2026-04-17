@@ -45,11 +45,21 @@ function thermalStyle(oneway: number): PathOptions {
   return { ...DEFAULT_STYLE, fillOpacity: 0.1 + ratio * 0.55 };
 }
 
-function formatDayLabel(dateStr: string, index: number): string {
-  const date = new Date(dateStr);
-  if (index === 0) return "Today";
-  if (index === 1) return "Tomorrow";
-  return date.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+function getLocalDateStr(offsetDays = 0): string {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function formatDayLabel(dateStr: string): string {
+  if (dateStr === getLocalDateStr(0)) return "Today";
+  if (dateStr === getLocalDateStr(1)) return "Tomorrow";
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+}
+
+function isDayAvailable(day: SummaryDay): boolean {
+  return day.date >= getLocalDateStr(0) && Object.keys(day.regions).length > 0;
 }
 
 type StyledLayer = Layer & {
@@ -93,6 +103,12 @@ export function RegionForecastMap() {
         if (!data?.days?.length) return;
         daysRef.current = data.days;
         setDays(data.days);
+        const todayStr = getLocalDateStr(0);
+        const todayIndex = data.days.findIndex((d: SummaryDay) => d.date === todayStr);
+        const firstAvailable = data.days.findIndex((d: SummaryDay) => isDayAvailable(d));
+        const initial = todayIndex !== -1 ? todayIndex : firstAvailable !== -1 ? firstAvailable : 0;
+        selectedDayRef.current = initial;
+        setSelectedDayIndex(initial);
       })
       .catch(() => {});
   }, []);
@@ -168,21 +184,25 @@ export function RegionForecastMap() {
       <div style={{ width: "100%" }}>
         {days.length > 0 && (
           <div className="flex gap-2 justify-center flex-wrap mb-2">
-            {days.map((day, i) => (
-              <button
-                key={day.date}
-                type="button"
-                onClick={() => {
-                  selectedDayRef.current = i;
-                  setSelectedDayIndex(i);
-                }}
-                className={`${
-                  i === selectedDayIndex ? "bg-purple-500" : "bg-gray-500"
-                } hover:bg-purple-700 text-white font-bold py-2 px-4 rounded`}
-              >
-                {formatDayLabel(day.date, i)}
-              </button>
-            ))}
+            {days.map((day, i) => {
+              const available = isDayAvailable(day);
+              return (
+                <button
+                  key={day.date}
+                  type="button"
+                  disabled={!available}
+                  onClick={() => {
+                    selectedDayRef.current = i;
+                    setSelectedDayIndex(i);
+                  }}
+                  className={`${
+                    i === selectedDayIndex ? "bg-purple-500" : available ? "bg-gray-500" : "bg-gray-700 opacity-40 cursor-not-allowed"
+                  } ${available ? "hover:bg-purple-700" : ""} text-white font-bold py-2 px-4 rounded`}
+                >
+                  {formatDayLabel(day.date)}
+                </button>
+              );
+            })}
           </div>
         )}
         <MapContainer
