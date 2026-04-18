@@ -52,14 +52,15 @@ function getLocalDateStr(offsetDays = 0): string {
 }
 
 function formatDayLabel(dateStr: string): string {
-  if (dateStr === getLocalDateStr(0)) return "Today";
-  if (dateStr === getLocalDateStr(1)) return "Tomorrow";
-  const [year, month, day] = dateStr.split("-").map(Number);
+  const d = dateStr.slice(0, 10);
+  if (d === getLocalDateStr(0)) return "Today";
+  if (d === getLocalDateStr(1)) return "Tomorrow";
+  const [year, month, day] = d.split("-").map(Number);
   return new Date(year, month - 1, day).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
 }
 
 function isDayAvailable(day: SummaryDay): boolean {
-  return day.date >= getLocalDateStr(0) && Object.keys(day.regions).length > 0;
+  return day.date.slice(0, 10) >= getLocalDateStr(0) && Object.keys(day.regions).length > 0;
 }
 
 type StyledLayer = Layer & {
@@ -104,7 +105,7 @@ export function RegionForecastMap() {
         daysRef.current = data.days;
         setDays(data.days);
         const todayStr = getLocalDateStr(0);
-        const todayIndex = data.days.findIndex((d: SummaryDay) => d.date === todayStr);
+        const todayIndex = data.days.findIndex((d: SummaryDay) => d.date.slice(0, 10) === todayStr);
         const firstAvailable = data.days.findIndex((d: SummaryDay) => isDayAvailable(d));
         const initial = todayIndex !== -1 ? todayIndex : firstAvailable !== -1 ? firstAvailable : 0;
         selectedDayRef.current = initial;
