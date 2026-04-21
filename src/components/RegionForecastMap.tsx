@@ -51,12 +51,16 @@ function getLocalDateStr(offsetDays = 0): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
+const DAY_ABBREVS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 function formatDayLabel(dateStr: string): string {
   const d = dateStr.slice(0, 10);
-  if (d === getLocalDateStr(0)) return "Today";
-  if (d === getLocalDateStr(1)) return "Tomorrow";
   const [year, month, day] = d.split("-").map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+  const date = new Date(year, month - 1, day);
+  const abbrev = DAY_ABBREVS[date.getDay()];
+  if (d === getLocalDateStr(0)) return `Today (${abbrev})`;
+  if (d === getLocalDateStr(1)) return `Tomorrow (${abbrev})`;
+  return date.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
 }
 
 function isDayAvailable(day: SummaryDay): boolean {
@@ -66,6 +70,7 @@ function isDayAvailable(day: SummaryDay): boolean {
 type StyledLayer = Layer & {
   setStyle: (style: PathOptions) => void;
   bindTooltip: (content: string | (() => string), options?: object) => void;
+  getTooltip: () => { setContent: (content: string) => void } | undefined;
 };
 
 function SvgChart({ svg, loading }: { svg: string; loading: boolean }) {
@@ -89,6 +94,7 @@ export function RegionForecastMap() {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [chart, setChart] = useState<string | null>(null);
   const [chartLoading, setChartLoading] = useState(false);
+  const [scrapedAt, setScrapedAt] = useState<string | null>(null);
 
   const selectedDayRef = useRef(0);
   const selectedRegionRef = useRef<string | null>(null);
@@ -100,10 +106,11 @@ export function RegionForecastMap() {
   useEffect(() => {
     fetch(`${XCTHERM_DATA_BASE}/summary_latest.json`)
       .then((r) => (r.ok ? r.json() : null))
-      .then((data: { days?: SummaryDay[] } | null) => {
+      .then((data: { days?: SummaryDay[]; _scrapedAt?: string } | null) => {
         if (!data?.days?.length) return;
         daysRef.current = data.days;
         setDays(data.days);
+        if (data._scrapedAt) setScrapedAt(data._scrapedAt);
         const todayStr = getLocalDateStr(0);
         const todayIndex = data.days.findIndex((d: SummaryDay) => d.date.slice(0, 10) === todayStr);
         const firstAvailable = data.days.findIndex((d: SummaryDay) => isDayAvailable(d));
@@ -127,6 +134,10 @@ export function RegionForecastMap() {
         thermalStyleMap.current.set(name, style);
         layer.setStyle(style);
       }
+      // Update permanent label
+      const info = dayRegions[name];
+      const labelContent = info ? `${name}<br/>(${info.oneway}km)` : name;
+      layer.getTooltip()?.setContent(labelContent);
     }
   }, [days, selectedDayIndex, selectedRegion]);
 
@@ -149,11 +160,8 @@ export function RegionForecastMap() {
     layerMap.current.set(name, l);
 
     l.bindTooltip(
-      () => {
-        const info = daysRef.current[selectedDayRef.current]?.regions[name];
-        return info != null ? `${name} (${info.oneway}km)` : name;
-      },
-      { sticky: true, className: "region-tooltip" }
+      name,
+      { permanent: true, direction: "center", className: "region-label" }
     );
 
     l.on({
@@ -240,6 +248,11 @@ export function RegionForecastMap() {
                 </span>
               )}
             </div>
+            {scrapedAt && (
+              <div style={{ color: "#666", fontSize: "0.75em", marginBottom: 6 }}>
+                Last updated: {new Date(scrapedAt).toLocaleString()}
+              </div>
+            )}
             {chart && <SvgChart svg={chart} loading={chartLoading} />}
             {!chartLoading && !chart && <p style={{ color: "#555" }}>No chart available.</p>}
           </>

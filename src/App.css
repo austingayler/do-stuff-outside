@@ -34,3 +34,22 @@
     border-image-source: linear-gradient(405deg, red, orange, yellow, green, blue, indigo, violet);
   }
 }
+
+/* Permanent polygon region labels */
+.region-label {
+  background: rgba(0, 0, 0, 0.55) !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 4px !important;
+  padding: 2px 5px !important;
+  color: #fff !important;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.3;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.region-label::before {
+  display: none !important;
+}
