@@ -57,10 +57,43 @@ async function takeScreenshots() {
     await page.waitForNetworkIdle({ timeout: 10000 }).catch(() => {});
 
     for (const day of dates) {
+      // Check if the day button is available before clicking
+      const isDisabled = await page.$eval(
+        `button[id="${day}"]`,
+        (btn) =>
+          btn.disabled ||
+          btn.hasAttribute("disabled") ||
+          btn.classList.contains("disabled") ||
+          btn.getAttribute("aria-disabled") === "true",
+      ).catch(() => true); // treat missing button as unavailable
+
+      if (isDisabled) {
+        console.log(`Skipping date ${day} — button is disabled or unavailable`);
+        continue;
+      }
+
       // Click the date button (use attribute selector since ID starts with digit)
       console.log(`Selecting date: ${day}`);
       await page.click(`button[id="${day}"]`);
       await page.waitForNetworkIdle({ timeout: 10000 }).catch(() => {});
+
+      // Verify the button is now active/selected after clicking
+      const isActive = await page.$eval(
+        `button[id="${day}"]`,
+        (btn) =>
+          btn.classList.contains("active") ||
+          btn.classList.contains("selected") ||
+          btn.getAttribute("aria-pressed") === "true" ||
+          btn.getAttribute("aria-selected") === "true" ||
+          btn.style.backgroundColor !== "",
+      ).catch(() => false);
+
+      if (!isActive) {
+        console.warn(
+          `Warning: day button ${day} may not have been activated after click — skipping screenshot to avoid stale data`,
+        );
+        continue;
+      }
 
       // Wait a moment for the map to render
       await new Promise((resolve) => setTimeout(resolve, 2000));

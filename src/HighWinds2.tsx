@@ -89,6 +89,11 @@ function formatDay(day: string, index: number): string {
 
 const HighWinds2: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+
+  const handleImageError = (key: string) => {
+    setFailedImages((prev) => new Set(prev).add(key));
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -149,23 +154,39 @@ const HighWinds2: React.FC = () => {
               >
                 {elevationLabels[elevation]}
               </td>
-              {days.map((day, index) => (
-                <td key={day} style={{ padding: 4, border: "1px solid #ccc" }}>
-                  <img
-                    src={createWindyImageUrl(elevation, day)}
-                    alt={`Wind at ${elevationLabels[elevation]} on ${formatDay(day, index)}`}
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                      display: "block",
-                      cursor: "pointer",
-                    }}
-                    onClick={() =>
-                      setSelectedImage(createWindyImageUrl(elevation, day))
-                    }
-                  />
-                </td>
-              ))}
+              {days.map((day, index) => {
+                const imageKey = `${elevation}-${day}`;
+                const imageUrl = createWindyImageUrl(elevation, day);
+                return (
+                  <td key={day} style={{ padding: 4, border: "1px solid #ccc" }}>
+                    {failedImages.has(imageKey) ? (
+                      <div
+                        style={{
+                          padding: 16,
+                          textAlign: "center",
+                          color: "#999",
+                          fontSize: 13,
+                        }}
+                      >
+                        No data
+                      </div>
+                    ) : (
+                      <img
+                        src={imageUrl}
+                        alt={`Wind at ${elevationLabels[elevation]} on ${formatDay(day, index)}`}
+                        style={{
+                          width: "100%",
+                          height: "auto",
+                          display: "block",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => setSelectedImage(imageUrl)}
+                        onError={() => handleImageError(imageKey)}
+                      />
+                    )}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>
