@@ -1,0 +1,182 @@
+{
+  "publishDate": "2026-06-08T04:26:50.07458",
+  "calculationDate": "2026-06-08T03:00:00",
+  "days": [
+    {
+      "date": "2026-06-08T00:00:00",
+      "regions": {
+        "Valais Central": {
+          "forecastId": 3319851,
+          "oneway": 245,
+          "return": 4,
+          "climb": 0
+        },
+        "Oberwallis": {
+          "forecastId": 3319856,
+          "oneway": 270,
+          "return": 67,
+          "climb": 0
+        },
+        "Berner Oberland": {
+          "forecastId": 3319867,
+          "oneway": 283,
+          "return": 0,
+          "climb": 0
+        },
+        "Berner Alpen": {
+          "forecastId": 3319855,
+          "oneway": 232,
+          "return": 13,
+          "climb": 0
+        },
+        "Emmental": {
+          "forecastId": 3319854,
+          "oneway": 122,
+          "return": 0,
+          "climb": 0
+        }
+      }
+    },
+    {
+      "date": "2026-06-09T00:00:00",
+      "regions": {
+        "Valais Central": {
+          "forecastId": 3320345,
+          "oneway": 0,
+          "return": 0,
+          "climb": 0
+        },
+        "Oberwallis": {
+          "forecastId": 3320350,
+          "oneway": 0,
+          "return": 0,
+          "climb": 0
+        },
+        "Berner Oberland": {
+          "forecastId": 3320361,
+          "oneway": 0,
+          "return": 0,
+          "climb": 0
+        },
+        "Berner Alpen": {
+          "forecastId": 3320349,
+          "oneway": 0,
+          "return": 0,
+          "climb": 0
+        },
+        "Emmental": {
+          "forecastId": 3320348,
+          "oneway": 55,
+          "return": 0,
+          "climb": 0
+        }
+      }
+    },
+    {
+      "date": "2026-06-10T00:00:00",
+      "regions": {
+        "Valais Central": {
+          "forecastId": 3316091,
+          "oneway": 0,
+          "return": 0,
+          "climb": 0
+        },
+        "Oberwallis": {
+          "forecastId": 3316101,
+          "oneway": 0,
+          "return": 0,
+          "climb": 0
+        },
+        "Berner Oberland": {
+          "forecastId": 3316115,
+          "oneway": 0,
+          "return": 0,
+          "climb": 0
+        },
+        "Berner Alpen": {
+          "forecastId": 3316100,
+          "oneway": 0,
+          "return": 0,
+          "climb": 0
+        },
+        "Emmental": {
+          "forecastId": 3316099,
+          "oneway": 0,
+          "return": 0,
+          "climb": 0
+        }
+      }
+    },
+    {
+      "date": "2026-06-11T00:00:00",
+      "regions": {
+        "Valais Central": {
+          "forecastId": 3317476,
+          "oneway": 134,
+          "return": 55,
+          "climb": 0
+        },
+        "Oberwallis": {
+          "forecastId": 3317486,
+          "oneway": 227,
+          "return": 0,
+          "climb": 0
+        },
+        "Berner Oberland": {
+          "forecastId": 3317500,
+          "oneway": 211,
+          "return": 48,
+          "climb": 0
+        },
+        "Berner Alpen": {
+          "forecastId": 3317485,
+          "oneway": 129,
+          "return": 30,
+          "climb": 0
+        },
+        "Emmental": {
+          "forecastId": 3317484,
+          "oneway": 244,
+          "return": 77,
+          "climb": 0
+        }
+      }
+    },
+    {
+      "date": "2026-06-12T00:00:00",
+      "regions": {
+        "Valais Central": {
+          "forecastId": 3318861,
+          "oneway": 0,
+          "return": 0,
+          "climb": 0
+        },
+        "Oberwallis": {
+          "forecastId": 3318871,
+          "oneway": 0,
+          "return": 0,
+          "climb": 0
+        },
+        "Berner Oberland": {
+          "forecastId": 3318885,
+          "oneway": 0,
+          "return": 0,
+          "climb": 0
+        },
+        "Berner Alpen": {
+          "forecastId": 3318870,
+          "oneway": 0,
+          "return": 0,
+          "climb": 0
+        },
+        "Emmental": {
+          "forecastId": 3318869,
+          "oneway": 0,
+          "return": 0,
+          "climb": 0
+        }
+      }
+    }
+  ],
+  "_scrapedAt": "2026-06-08T10:17:02.573Z"
+}
